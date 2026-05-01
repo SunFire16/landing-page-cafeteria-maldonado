@@ -42,11 +42,25 @@ exports.handler = async (event) => {
 
     const text = await upstream.text();
     const cache = method === 'GET' ? 'public, max-age=60, s-maxage=300' : 'no-store';
+    const contentType = upstream.headers.get('content-type') || '';
+
+    if (!contentType.includes('application/json')) {
+      return json(upstream.status, {
+        success: false,
+        count: 0,
+        data: null,
+        error: `El backend no devolvió JSON para ${endpoint}. Verifica que la función esté desplegada en la URL documentada.`,
+        meta: {
+          endpoint,
+          upstreamStatus: upstream.status,
+        },
+      });
+    }
 
     return {
       statusCode: upstream.status,
       headers: {
-        'Content-Type': upstream.headers.get('content-type') || 'application/json; charset=utf-8',
+        'Content-Type': contentType,
         ...corsHeaders(cache),
       },
       body: text,

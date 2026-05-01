@@ -70,6 +70,7 @@ function renderError(container, message) {
   clear(container);
   container.append(el('div', { class: 'state state--error' }, [
     el('p', { class: 'state__title' }, 'Los más vendidos se están actualizando.'),
-    el('p', { class: 'state__hint' }, `Intenta nuevamente en unos minutos. Detalle técnico: ${message}`),
+    el('p', { class: 'state__hint' }, 'Muy pronto verás aquí los productos favoritos de esta sucursal.'),
+    el('p', { class: 'state__tech' }, message),
   ]));
 }

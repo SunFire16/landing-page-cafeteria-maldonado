@@ -93,7 +93,12 @@ function renderError(container, message) {
   container.append(
     el('div', { class: 'state state--error' }, [
       el('p', { class: 'state__title' }, 'El menú se está actualizando.'),
-      el('p', { class: 'state__hint' }, `Intenta nuevamente en unos minutos. Detalle técnico: ${message}`),
+      el('p', { class: 'state__hint' }, 'Mientras tanto, puedes abrir la app o escribir al grupo de WhatsApp para consultar disponibilidad.'),
+      el('div', { class: 'state__actions' }, [
+        el('a', { class: 'btn btn--primary', href: 'https://app-cafeteria-maldonado.web.app/', target: '_blank', rel: 'noopener' }, 'Pedir en la app'),
+        el('a', { class: 'btn btn--whatsapp', href: 'https://chat.whatsapp.com/Kgoj7HA5a8WG12GiYAC8G5', target: '_blank', rel: 'noopener' }, 'Consultar en WhatsApp'),
+      ]),
+      el('p', { class: 'state__tech' }, message),
     ]),
   );
 }
