@@ -34,6 +34,8 @@ body.tv {
 .tv-grid .card__price { color: var(--color-gold); font-size: 1.4rem; }
 .tv-grid .card__media { aspect-ratio: 16/10; }
 .tv-grid .tag { background: rgba(212,162,76,0.2); color: var(--color-gold-soft); }
+.tv-grid .stock-badge { font-size: 1rem; padding: 7px 12px; }
+.tv-grid .card--unavailable { opacity: 0.82; }
 
 .tv-footer {
   display: flex; align-items: center; justify-content: space-between; gap: 16px;

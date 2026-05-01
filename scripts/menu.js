@@ -44,8 +44,12 @@ function renderList(container, items, variant) {
 }
 
 function renderCard(item, variant) {
-  return el('article', { class: `card card--menu card--${variant}` }, [
-    el('div', { class: 'card__media' }, [safeImage(item.imageUrl, item.name)]),
+  const availability = getAvailability(item);
+  return el('article', { class: `card card--menu card--${variant} ${availability.isOut ? 'card--unavailable' : ''}` }, [
+    el('div', { class: 'card__media' }, [
+      safeImage(item.imageUrl, item.name),
+      el('span', { class: `stock-badge ${availability.isOut ? 'stock-badge--out' : ''}` }, availability.label),
+    ]),
     el('div', { class: 'card__body' }, [
       el('h3', { class: 'card__title' }, item.name),
       item.description ? el('p', { class: 'card__desc' }, item.description) : null,
@@ -55,6 +59,21 @@ function renderCard(item, variant) {
       ]),
     ]),
   ]);
+}
+
+function getAvailability(item) {
+  const raw = item.inventoryLocal;
+  const stock = Number(raw);
+  if (!Number.isFinite(stock)) {
+    return { label: 'Disponible', isOut: false };
+  }
+  if (stock <= 0) {
+    return { label: 'Agotado', isOut: true };
+  }
+  if (stock <= 5) {
+    return { label: `Quedan ${stock}`, isOut: false };
+  }
+  return { label: 'Disponible', isOut: false };
 }
 
 function renderEmpty(container) {
@@ -73,8 +92,8 @@ function renderError(container, message) {
   container.classList.remove('grid-menu');
   container.append(
     el('div', { class: 'state state--error' }, [
-      el('p', { class: 'state__title' }, 'No pudimos cargar el menú.'),
-      el('p', { class: 'state__hint' }, message),
+      el('p', { class: 'state__title' }, 'El menú se está actualizando.'),
+      el('p', { class: 'state__hint' }, `Intenta nuevamente en unos minutos. Detalle técnico: ${message}`),
     ]),
   );
 }

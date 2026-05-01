@@ -6,7 +6,9 @@ import { CONFIG } from './config.js';
 const memoryCache = new Map();
 
 function buildUrl(path, params = {}) {
-  const url = new URL(path, CONFIG.api.baseUrl);
+  const base = CONFIG.api.baseUrl.replace(/\/$/, '');
+  const pathname = path.startsWith('/') ? path : `/${path}`;
+  const url = new URL(`${base}${pathname}`, window.location.origin);
   for (const [key, value] of Object.entries(params)) {
     if (value === undefined || value === null || value === '') continue;
     url.searchParams.set(key, String(value));

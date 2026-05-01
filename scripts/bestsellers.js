@@ -69,7 +69,7 @@ function renderEmpty(container) {
 function renderError(container, message) {
   clear(container);
   container.append(el('div', { class: 'state state--error' }, [
-    el('p', { class: 'state__title' }, 'No pudimos cargar los más vendidos.'),
-    el('p', { class: 'state__hint' }, message),
+    el('p', { class: 'state__title' }, 'Los más vendidos se están actualizando.'),
+    el('p', { class: 'state__hint' }, `Intenta nuevamente en unos minutos. Detalle técnico: ${message}`),
   ]));
 }

@@ -39,7 +39,9 @@ Landing estática orientada a conversión hacia la app (Web/iPhone, Android) y a
 
 ## Endpoints consumidos (backend externo)
 
-Base: `https://us-central1-app-cafeteria-maldonado.cloudfunctions.net`
+El navegador consume rutas same-origin bajo `/api/*`; Netlify las reescribe a la función proxy `netlify/functions/api.js`, y esa función llama al backend real. Esto evita bloqueos CORS en producción.
+
+Base real del backend: `https://us-central1-app-cafeteria-maldonado.cloudfunctions.net`
 
 - `GET /landingMenuDelDia?locationId=LOCAL-01`
 - `GET /landingBestSellers?scope=location&locationId=LOCAL-01&limit=6`
