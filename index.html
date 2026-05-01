@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#3B2412" />
+  <title>Cafetería Maldonado — Pide rápido tu almuerzo</title>
+  <meta name="description" content="Cafetería Maldonado: pide tu almuerzo desde la app, gana puntos, evita filas y ve tu pedido en tiempo real. Disponible en Web, Android y WhatsApp." />
+  <meta name="robots" content="index,follow" />
+
+  <!-- Social -->
+  <meta property="og:title" content="Cafetería Maldonado — Pide rápido tu almuerzo" />
+  <meta property="og:description" content="Acumula puntos, pide en segundos y ve tu pedido en tiempo real." />
+  <meta property="og:image" content="/assets/logo.png" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/assets/logo.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/styles/base.css" />
+  <link rel="stylesheet" href="/styles/landing.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a href="/" class="brand" aria-label="Inicio Cafetería Maldonado">
+        <img class="brand__logo" src="/assets/logo.png" alt="" width="36" height="36" />
+        <span class="brand__name">Cafetería Maldonado</span>
+      </a>
+      <div class="site-header__spacer"></div>
+      <div class="location-switch">
+        <label for="locSelect">Sucursal</label>
+        <select id="locSelect" data-location-select aria-label="Selecciona la sucursal"></select>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container hero__grid">
+        <div>
+          <p class="hero__eyebrow">Cafetería Maldonado · <span data-location-name>Afuera</span></p>
+          <h1 class="hero__title">Tu almuerzo, <em>sin filas</em>, con la app de Cafetería Maldonado.</h1>
+          <p class="hero__lead">Pide en segundos, acumula puntos y sigue tu pedido en tiempo real. Ahora con IA integrada para hacer todo aún más práctico.</p>
+          <div class="hero__ctas">
+            <a class="btn btn--primary btn--lg" href="https://app-cafeteria-maldonado.web.app/" target="_blank" rel="noopener" data-cta="web">📱 Pedir ahora (Web/iPhone)</a>
+            <a class="btn btn--gold btn--lg" href="https://play.google.com/store/apps/details?id=com.cafeteriamaldonado.app" target="_blank" rel="noopener" data-cta="android">🤖 Descargar para Android</a>
+            <a class="btn btn--whatsapp btn--lg" href="https://chat.whatsapp.com/Kgoj7HA5a8WG12GiYAC8G5" target="_blank" rel="noopener" data-cta="whatsapp">💬 Unirme al grupo de WhatsApp</a>
+          </div>
+          <div class="hero__meta">
+            <span>🏆 <strong>Puntos</strong> en cada compra</span>
+            <span>⏱️ <strong>Menos espera</strong> en hora pico</span>
+            <span>✅ <strong>Cero errores</strong> en tu pedido</span>
+          </div>
+        </div>
+        <div class="hero__visual" aria-hidden="true">
+          <img src="/assets/logo.png" alt="" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Beneficios -->
+    <section class="section" id="beneficios">
+      <div class="container">
+        <div class="section__head">
+          <span class="section__eyebrow">¿Por qué usar la app?</span>
+          <h2 class="section__title">Diseñada para tu hora de almuerzo</h2>
+          <p class="section__sub">Todo desde un solo lugar: pides, pagas, ganas puntos y ves tu pedido al instante.</p>
+        </div>
+        <div class="benefits">
+          <article class="benefit"><div class="benefit__icon">🏆</div><h3 class="benefit__title">Acumulas puntos</h3><p class="benefit__text">Solo por la app. Mientras más pides, más recompensas.</p></article>
+          <article class="benefit"><div class="benefit__icon">🎯</div><h3 class="benefit__title">Pides en segundos</h3><p class="benefit__text">Sin complicaciones, en pocos toques desde tu celular.</p></article>
+          <article class="benefit"><div class="benefit__icon">⏱️</div><h3 class="benefit__title">Menos espera</h3><p class="benefit__text">Mejor atención y tiempos optimizados.</p></article>
+          <article class="benefit"><div class="benefit__icon">👀</div><h3 class="benefit__title">Pedido en tiempo real</h3><p class="benefit__text">Sabes exactamente cuándo está listo.</p></article>
+          <article class="benefit"><div class="benefit__icon">✅</div><h3 class="benefit__title">Menos errores</h3><p class="benefit__text">Todo como lo pediste, sin confusiones.</p></article>
+          <article class="benefit"><div class="benefit__icon">📲</div><h3 class="benefit__title">Todo en un solo lugar</h3><p class="benefit__text">Web, Android y comunidad de WhatsApp integradas.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Menú del día -->
+    <section class="section section--tight" id="menu">
+      <div class="container">
+        <div class="section__head">
+          <span class="section__eyebrow">Hoy en <span data-location-name>Afuera</span></span>
+          <h2 class="section__title">Menú del día</h2>
+          <p class="section__sub">Los almuerzos disponibles ahora mismo en la sucursal seleccionada.</p>
+        </div>
+        <div data-menu></div>
+        <p style="margin-top:18px;">
+          <a class="btn btn--ghost" href="tv.html" data-tv-link>🖥️ Ver modo TV (pantalla del local)</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- Más vendidos -->
+    <section class="section section--tight" id="mas-vendidos">
+      <div class="container">
+        <div class="section__head">
+          <span class="section__eyebrow">Lo que más piden</span>
+          <h2 class="section__title">Más vendidos</h2>
+          <p class="section__sub">El top de productos favoritos en esta sucursal.</p>
+        </div>
+        <div data-bestsellers></div>
+      </div>
+    </section>
+
+    <!-- IA -->
+    <section class="section" id="ia">
+      <div class="container">
+        <div class="ai">
+          <div>
+            <span class="section__eyebrow" style="color: var(--color-gold);">Nuevo</span>
+            <h2>IA integrada en tus pedidos</h2>
+            <p>Sugerencias inteligentes, recomendaciones según lo que más te gusta y un flujo más rápido para que pidas tu almuerzo en menos toques.</p>
+            <p style="margin-top: 14px;">
+              <a class="btn btn--gold" href="https://app-cafeteria-maldonado.web.app/" target="_blank" rel="noopener" data-cta="web_ia">Probar ahora</a>
+            </p>
+          </div>
+          <div class="ai__visual">🤖</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Row -->
+    <section class="section section--tight">
+      <div class="container">
+        <div class="cta-row">
+          <div class="cta-row__card">
+            <span class="tag">Web / iPhone</span>
+            <p class="cta-row__title">Plataforma online</p>
+            <p class="cta-row__sub">Funciona en cualquier navegador, sin instalar nada.</p>
+            <a class="btn btn--primary" href="https://app-cafeteria-maldonado.web.app/" target="_blank" rel="noopener" data-cta="web_cta_row">Abrir app web</a>
+          </div>
+          <div class="cta-row__card">
+            <span class="tag">Android</span>
+            <p class="cta-row__title">Play Store</p>
+            <p class="cta-row__sub">La experiencia completa, optimizada para tu celular.</p>
+            <a class="btn btn--gold" href="https://play.google.com/store/apps/details?id=com.cafeteriamaldonado.app" target="_blank" rel="noopener" data-cta="android_cta_row">Descargar app</a>
+          </div>
+          <div class="cta-row__card">
+            <span class="tag">WhatsApp</span>
+            <p class="cta-row__title">Comunidad</p>
+            <p class="cta-row__sub">Promos, novedades y atención directa.</p>
+            <a class="btn btn--whatsapp" href="https://chat.whatsapp.com/Kgoj7HA5a8WG12GiYAC8G5" target="_blank" rel="noopener" data-cta="whatsapp_cta_row">Unirme al grupo</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Encuesta -->
+    <section class="section" id="encuesta">
+      <div class="container">
+        <div class="section__head">
+          <span class="section__eyebrow">Tu opinión cuenta</span>
+          <h2 class="section__title">Encuesta rápida de satisfacción</h2>
+          <p class="section__sub">Tus respuestas son privadas y nos ayudan a mejorar la atención en <span data-location-name>Afuera</span>.</p>
+        </div>
+        <form class="feedback" data-feedback-form novalidate>
+          <fieldset class="feedback__row" style="border:0;padding:0;margin:0;">
+            <legend class="feedback__label">¿Qué tal tu experiencia general?</legend>
+            <div class="rating" role="radiogroup" aria-label="Calificación general">
+              <input id="rg1" type="radio" name="ratingGeneral" value="1" required /><label for="rg1">1</label>
+              <input id="rg2" type="radio" name="ratingGeneral" value="2" /><label for="rg2">2</label>
+              <input id="rg3" type="radio" name="ratingGeneral" value="3" /><label for="rg3">3</label>
+              <input id="rg4" type="radio" name="ratingGeneral" value="4" /><label for="rg4">4</label>
+              <input id="rg5" type="radio" name="ratingGeneral" value="5" /><label for="rg5">5</label>
+            </div>
+          </fieldset>
+
+          <fieldset class="feedback__row" style="border:0;padding:0;margin:0;">
+            <legend class="feedback__label">Rapidez del servicio</legend>
+            <div class="rating" role="radiogroup" aria-label="Rapidez">
+              <input id="rs1" type="radio" name="ratingSpeed" value="1" required /><label for="rs1">1</label>
+              <input id="rs2" type="radio" name="ratingSpeed" value="2" /><label for="rs2">2</label>
+              <input id="rs3" type="radio" name="ratingSpeed" value="3" /><label for="rs3">3</label>
+              <input id="rs4" type="radio" name="ratingSpeed" value="4" /><label for="rs4">4</label>
+              <input id="rs5" type="radio" name="ratingSpeed" value="5" /><label for="rs5">5</label>
+            </div>
+          </fieldset>
+
+          <fieldset class="feedback__row" style="border:0;padding:0;margin:0;">
+            <legend class="feedback__label">Precisión de tu pedido</legend>
+            <div class="rating" role="radiogroup" aria-label="Precisión">
+              <input id="ra1" type="radio" name="ratingAccuracy" value="1" required /><label for="ra1">1</label>
+              <input id="ra2" type="radio" name="ratingAccuracy" value="2" /><label for="ra2">2</label>
+              <input id="ra3" type="radio" name="ratingAccuracy" value="3" /><label for="ra3">3</label>
+              <input id="ra4" type="radio" name="ratingAccuracy" value="4" /><label for="ra4">4</label>
+              <input id="ra5" type="radio" name="ratingAccuracy" value="5" /><label for="ra5">5</label>
+            </div>
+          </fieldset>
+
+          <div class="feedback__row">
+            <label class="feedback__label" for="comment">Comentario (opcional)</label>
+            <textarea id="comment" name="comment" class="feedback__comment" placeholder="¿Algo que podamos mejorar?"></textarea>
+            <div class="feedback__counter" data-feedback-counter>0/500</div>
+          </div>
+
+          <button class="btn btn--primary btn--lg" type="submit">Enviar mi opinión</button>
+          <div class="feedback__status" data-feedback-status role="status" aria-live="polite"></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Outro -->
+    <section class="section">
+      <div class="container">
+        <div class="outro">
+          <h2>Empieza ahora</h2>
+          <p>Elige tu canal favorito y vive una experiencia más rápida y cómoda en Cafetería Maldonado.</p>
+          <div class="outro__ctas">
+            <a class="btn btn--gold btn--lg" href="https://app-cafeteria-maldonado.web.app/" target="_blank" rel="noopener" data-cta="web_outro">Abrir app web</a>
+            <a class="btn btn--primary btn--lg" href="https://play.google.com/store/apps/details?id=com.cafeteriamaldonado.app" target="_blank" rel="noopener" data-cta="android_outro">Descargar Android</a>
+            <a class="btn btn--whatsapp btn--lg" href="https://chat.whatsapp.com/Kgoj7HA5a8WG12GiYAC8G5" target="_blank" rel="noopener" data-cta="whatsapp_outro">Unirme al WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span data-year>2026</span> Cafetería Maldonado · <a href="tv.html" data-tv-link>Modo TV</a></p>
+    </div>
+  </footer>
+
+  <script type="module" src="/scripts/landing.js"></script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+[build]
+  publish = "."
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/styles/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, must-revalidate"
+
+[[headers]]
+  for = "/scripts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, must-revalidate"
+
+[[redirects]]
+  from = "/app"
+  to = "https://app-cafeteria-maldonado.web.app/"
+  status = 302
+
+[[redirects]]
+  from = "/android"
+  to = "https://play.google.com/store/apps/details?id=com.cafeteriamaldonado.app"
+  status = 302
+
+[[redirects]]
+  from = "/whatsapp"
+  to = "https://chat.whatsapp.com/Kgoj7HA5a8WG12GiYAC8G5"
+  status = 302
