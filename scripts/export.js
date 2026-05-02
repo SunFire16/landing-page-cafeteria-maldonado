@@ -141,7 +141,8 @@ async function snapshot(node) {
       // html2canvas no respeta object-fit:cover en <img>. Antes de capturar,
       // convertimos cada imagen de card a background-image en su contenedor
       // para que aparezca recortada (cover) y no estirada.
-      onclone(_clonedDoc, _el) {
+      onclone(_clonedDoc) {
+        // html2canvas no respeta object-fit:cover → convertimos imágenes a background-image
         _clonedDoc.querySelectorAll('.card__media').forEach((media) => {
           const img = media.querySelector('img');
           if (!img || !img.src) return;
@@ -150,6 +151,23 @@ async function snapshot(node) {
           media.style.backgroundPosition = 'center';
           media.style.backgroundRepeat = 'no-repeat';
           img.remove();
+        });
+        // html2canvas no centra correctamente el texto en pills flex. Lo forzamos
+        // con inline-flex + line-height:1 para que el texto quede centrado en el óvalo.
+        _clonedDoc.querySelectorAll('.location-status, .variant-location').forEach((pill) => {
+          pill.style.display = 'inline-flex';
+          pill.style.alignItems = 'center';
+          pill.style.justifyContent = 'center';
+          pill.style.lineHeight = '1';
+        });
+        _clonedDoc.querySelectorAll('.location-status__mark, .location-status__label').forEach((s) => {
+          s.style.lineHeight = '1';
+          s.style.verticalAlign = 'middle';
+        });
+        _clonedDoc.querySelectorAll('.location-statuses, .variant-locations').forEach((row) => {
+          row.style.display = 'flex';
+          row.style.alignItems = 'center';
+          row.style.flexWrap = 'wrap';
         });
       },
     })

@@ -284,6 +284,26 @@ body.tv {
 .unified-menu--tv .location-status--no  { color: #b23a3a; background: rgba(178,58,58,0.12); border-color: rgba(178,58,58,0.22); }
 .unified-menu--tv .location-status__mark { font-size: 1em; }
 
+/* Descripción inline: aparece después de los pills de local, solo en TV denso para
+   cards grandes donde ya no hay bloque card__desc por falta de espacio. */
+.unified-menu--tv .card__desc-inline { display: none; }
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--lg .card__desc-inline,
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--xl .card__desc-inline,
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--lg .card__desc-inline,
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--xl .card__desc-inline {
+  display: inline;
+  font-size: 0.82rem;
+  color: #6b4a32;
+  font-style: italic;
+  opacity: 0.75;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 40ch;
+  align-self: center;
+  margin-left: 4px;
+}
+
 /* ---------- Variantes ---------- */
 .unified-menu--tv .variants {
   display: grid;
@@ -320,6 +340,10 @@ body.tv {
 }
 .unified-menu--tv .card--lg .variant { font-size: calc(1.12rem * var(--variant-fs, 1)); padding: var(--variant-pad, 6px 10px); gap: var(--variant-gap, 3px); }
 .unified-menu--tv .card--xl .variant { font-size: calc(0.95rem * var(--variant-fs, 1)); padding: var(--variant-pad, 5px 9px); gap: var(--variant-gap, 2px); border-radius: 10px; }
+/* Producto en un solo local: sin badges por variante → más espacio → fuente más grande */
+.unified-menu--tv .card--single-loc .variant { font-size: calc(1.42rem * var(--variant-fs, 1)); }
+.unified-menu-wrap--tv[data-density] .unified-menu--tv .card--single-loc .variant { font-size: calc(1.28rem * var(--variant-fs, 1)) !important; }
+.unified-menu-wrap--tv[data-density] .unified-menu--tv .card--single-loc.card--xl .variant { font-size: calc(1.36rem * var(--variant-fs, 1)) !important; }
 .unified-menu--tv .variant__name {
   font-weight: 700; color: #3a2113;
   white-space: normal; overflow: visible; text-overflow: clip;

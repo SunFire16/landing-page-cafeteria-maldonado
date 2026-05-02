@@ -323,16 +323,20 @@ function renderCard(item, variant) {
   const priceLabel = getPriceLabel(item, variants);
   const sizeMod = variants.length >= 7 ? 'card--xl' : variants.length >= 5 ? 'card--lg' : '';
   const hasVariants = variants.length ? 'card--has-variants' : '';
-  return el('article', { class: `card card--menu card--${variant} ${sizeMod} ${hasVariants} ${availability.isOut ? 'card--unavailable' : ''}` }, [
+  // Mostrar indicadores de local por variante SOLO si el producto está en ambos locales.
+  // Si solo está en uno, todas las variantes comparten esa restricción → es redundante.
+  const activeLocs = item.locations?.filter((l) => l.available).length ?? 0;
+  const showVariantLocations = activeLocs >= 2;
+  return el('article', { class: `card card--menu card--${variant} ${sizeMod} ${hasVariants} ${variants.length && !showVariantLocations ? 'card--single-loc' : ''} ${availability.isOut ? 'card--unavailable' : ''}` }, [
     el('div', { class: 'card__media' }, [
       safeImage(item.imageUrl, item.name),
       el('span', { class: `stock-badge ${availability.isOut ? 'stock-badge--out' : ''}` }, availability.label),
     ]),
     el('div', { class: 'card__body' }, [
       el('h3', { class: 'card__title' }, item.name),
-      item.locations?.length ? renderLocationStatuses(item.locations) : null,
+      item.locations?.length ? renderLocationStatuses(item.locations, item.description) : null,
       item.description ? el('p', { class: 'card__desc' }, item.description) : null,
-      variants.length ? renderVariants(variants) : null,
+      variants.length ? renderVariants(variants, showVariantLocations) : null,
       el('div', { class: 'card__row' }, [
         el('span', { class: 'card__price' }, priceLabel),
         item.category ? el('span', { class: 'tag' }, item.category) : null,
@@ -363,7 +367,7 @@ function getPriceLabel(item, variants) {
   return 'Ver opciones';
 }
 
-function renderVariants(variants) {
+function renderVariants(variants, showVariantLocations = true) {
   return el('div', { class: 'variants' }, variants.map((variant) => {
     const stock = Number(variant.inventoryLocal);
     const anyLocationAvailable = variant.locations?.some((loc) => loc.available);
@@ -372,19 +376,21 @@ function renderVariants(variants) {
       el('span', { class: 'variant__name' }, variant.name),
       el('span', { class: 'variant__meta' }, [
         el('span', { class: 'variant__price' }, formatPrice(variant.price)),
-        variant.locations?.length ? renderMiniLocationStatuses(variant.locations) : null,
+        showVariantLocations && variant.locations?.length ? renderMiniLocationStatuses(variant.locations) : null,
       ]),
     ]);
   }));
 }
 
-function renderLocationStatuses(locations) {
-  return el('div', { class: 'location-statuses' }, locations.map((loc) => (
+function renderLocationStatuses(locations, description) {
+  const children = locations.map((loc) => (
     el('span', { class: `location-status ${loc.available ? 'location-status--yes' : 'location-status--no'}` }, [
       el('span', { class: 'location-status__mark' }, loc.available ? '✓' : '×'),
       el('span', { class: 'location-status__label' }, loc.label),
     ])
-  )));
+  ));
+  if (description) children.push(el('span', { class: 'card__desc-inline' }, description));
+  return el('div', { class: 'location-statuses' }, children);
 }
 
 function renderMiniLocationStatuses(locations) {
