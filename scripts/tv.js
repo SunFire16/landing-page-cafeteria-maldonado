@@ -1,8 +1,8 @@
 // Entry point del Modo TV: muestra menú del día por sucursal con auto-refresh y exportables.
 
 import { CONFIG } from './config.js';
-import { getCurrentLocation, setCurrentLocation, readLocationFromUrl } from './location.js';
-import { renderMenu } from './menu.js';
+import { readLocationFromUrl } from './location.js';
+import { renderAllMenus } from './menu.js';
 import { exportNodeToImage, exportNodeToPdf } from './export.js';
 import { track } from './analytics.js';
 
@@ -10,7 +10,6 @@ readLocationFromUrl();
 
 const refs = {
   menu: null,
-  locName: null,
   time: null,
   shell: null,
 };
@@ -22,9 +21,7 @@ function tickClock() {
 }
 
 async function refresh() {
-  const loc = getCurrentLocation();
-  if (refs.locName) refs.locName.textContent = loc.shortName;
-  if (refs.menu) await renderMenu(refs.menu, { variant: 'tv' });
+  if (refs.menu) await renderAllMenus(refs.menu, { variant: 'tv' });
 }
 
 function bindControls() {
@@ -49,31 +46,15 @@ function bindControls() {
     } catch (e) { alert(`No se pudo exportar PDF: ${e.message}`); }
   });
 
-  const sel = document.querySelector('[data-tv-location]');
-  if (sel) {
-    for (const loc of CONFIG.locations) {
-      const opt = document.createElement('option');
-      opt.value = loc.id;
-      opt.textContent = loc.name;
-      sel.append(opt);
-    }
-    sel.value = getCurrentLocation().id;
-    sel.addEventListener('change', (e) => {
-      setCurrentLocation(e.target.value);
-      refresh();
-    });
-  }
 }
 
 function fileNameFor(ext) {
-  const loc = getCurrentLocation();
   const date = new Date().toISOString().slice(0, 10);
-  return `menu-${loc.id}-${date}.${ext}`;
+  return `menu-ambos-locales-${date}.${ext}`;
 }
 
 function init() {
   refs.menu = document.querySelector('[data-tv-menu]');
-  refs.locName = document.querySelector('[data-tv-location-name]');
   refs.time = document.querySelector('[data-tv-time]');
   refs.shell = document.querySelector('[data-tv-shell]');
 

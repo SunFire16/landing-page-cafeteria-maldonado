@@ -16,7 +16,7 @@ body.tv {
 .tv-header__loc strong { font-family: var(--font-display); color: #fff; }
 .tv-header__time { font-variant-numeric: tabular-nums; font-size: 1.4rem; color: rgba(255,255,255,0.85); }
 
-.tv-main { padding: 28px 40px; overflow: hidden; color: var(--color-ink); }
+.tv-main { padding: 28px 40px 128px; overflow: auto; color: var(--color-ink); }
 .tv-eyebrow { color: var(--color-gold); font-size: 1rem; letter-spacing: 0.18em; text-transform: uppercase; }
 .tv-title { font-size: clamp(2.4rem, 4vw, 3.6rem); margin-top: 4px; }
 .tv-grid { margin-top: 24px; display: grid; gap: 22px; grid-template-columns: repeat(3, 1fr); }
@@ -40,6 +40,23 @@ body.tv {
 .tv-grid .variant__name { color: var(--color-ink-soft); }
 .tv-grid .variant__meta { color: var(--color-coffee-dark); }
 
+.location-menus--tv {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 26px;
+}
+.location-menus--tv .location-menu {
+  background: rgba(255,255,255,0.78);
+  padding: 18px;
+}
+.location-menus--tv .location-menu__title { font-size: 1.25rem; }
+.location-menus--tv .location-menu__eyebrow { font-size: 0.88rem; }
+.location-menus--tv .location-menu__updated { font-size: 0.9rem; }
+.location-menus--tv .grid-menu { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); margin-top: 0; }
+
+@media (max-width: 1180px) {
+  .location-menus--tv { grid-template-columns: 1fr; }
+}
+
 .tv-footer {
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
   padding: 18px 40px; background: #3b2412;
@@ -49,7 +66,7 @@ body.tv {
 .tv-footer__qr { display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,0.85); }
 
 .tv-controls {
-  position: fixed; right: 16px; bottom: 16px; display: flex; gap: 8px;
+  position: fixed; right: 16px; bottom: 18px; display: flex; gap: 8px;
   background: rgba(0,0,0,0.55); padding: 8px; border-radius: var(--radius-pill);
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   z-index: 100;
@@ -63,6 +80,11 @@ body.tv {
 }
 .tv-controls .btn:hover { background: rgba(255,255,255,0.16); }
 .tv-controls select.btn { color: #fff; }
+
+@media (max-width: 900px) {
+  .tv-controls { left: 12px; right: 12px; overflow-x: auto; border-radius: 20px; }
+  .tv-controls .btn { white-space: nowrap; }
+}
 
 .tv-state { padding: 32px; background: rgba(255,255,255,0.06); border-radius: var(--radius-md); border: 1px dashed rgba(255,255,255,0.18); text-align: center; }
 .tv-state__title { font-weight: 700; font-size: 1.4rem; }

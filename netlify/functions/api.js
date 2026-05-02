@@ -18,6 +18,10 @@ exports.handler = async (event) => {
     };
   }
 
+  if (endpoint === 'image') {
+    return proxyImage(event);
+  }
+
   if (!ALLOWED_ENDPOINTS.has(endpoint)) {
     return json(404, {
       success: false,
@@ -75,6 +79,55 @@ exports.handler = async (event) => {
     });
   }
 };
+
+async function proxyImage(event) {
+  const rawUrl = event.queryStringParameters?.url || '';
+  let target;
+  try {
+    target = new URL(rawUrl);
+  } catch {
+    return json(400, {
+      success: false,
+      count: 0,
+      data: null,
+      error: 'URL de imagen inválida',
+      meta: null,
+    });
+  }
+
+  const allowedHosts = new Set(['firebasestorage.googleapis.com']);
+  if (target.protocol !== 'https:' || !allowedHosts.has(target.hostname)) {
+    return json(400, {
+      success: false,
+      count: 0,
+      data: null,
+      error: 'Host de imagen no permitido',
+      meta: null,
+    });
+  }
+
+  const upstream = await fetch(target.toString());
+  if (!upstream.ok) {
+    return json(upstream.status, {
+      success: false,
+      count: 0,
+      data: null,
+      error: 'No se pudo cargar la imagen del producto',
+      meta: { upstreamStatus: upstream.status },
+    });
+  }
+
+  const buffer = Buffer.from(await upstream.arrayBuffer());
+  return {
+    statusCode: 200,
+    isBase64Encoded: true,
+    headers: {
+      'Content-Type': upstream.headers.get('content-type') || 'image/jpeg',
+      ...corsHeaders('public, max-age=86400, s-maxage=86400'),
+    },
+    body: buffer.toString('base64'),
+  };
+}
 
 function resolveEndpoint(path = '') {
   const parts = path.split('/').filter(Boolean);

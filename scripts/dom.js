@@ -37,7 +37,7 @@ export function formatPrice(value) {
 
 export function safeImage(url, alt) {
   const img = el('img', {
-    src: url || '',
+    src: proxiedImageUrl(url),
     alt: alt || '',
     loading: 'lazy',
     decoding: 'async',
@@ -47,4 +47,17 @@ export function safeImage(url, alt) {
     img.replaceWith(el('div', { class: 'img-fallback', 'aria-hidden': 'true' }, '☕'));
   });
   return img;
+}
+
+function proxiedImageUrl(url) {
+  if (!url) return '';
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname === 'firebasestorage.googleapis.com') {
+      return `/api/image?url=${encodeURIComponent(url)}`;
+    }
+  } catch {
+    return url;
+  }
+  return url;
 }

@@ -1,6 +1,7 @@
 // Render del bloque "Menú del día" (landing) y para Modo TV.
 
 import { getMenuDelDia } from './api.js';
+import { CONFIG } from './config.js';
 import { el, clear, formatPrice, safeImage } from './dom.js';
 import { getCurrentLocation } from './location.js';
 
@@ -22,6 +23,74 @@ export async function renderMenu(container, { variant = 'landing' } = {}) {
     renderError(container, err.message);
     return { count: 0, error: err };
   }
+}
+
+export async function renderAllMenus(container, { variant = 'landing' } = {}) {
+  setAllSkeleton(container, variant);
+
+  const results = await Promise.all(CONFIG.locations.map(async (loc) => {
+    try {
+      const res = await getMenuDelDia(loc.id);
+      return {
+        loc,
+        meta: res?.meta,
+        items: Array.isArray(res?.data) ? res.data : [],
+      };
+    } catch (error) {
+      return { loc, error };
+    }
+  }));
+
+  clear(container);
+  container.classList.remove('grid-menu', 'grid-menu--landing', 'grid-menu--tv');
+  container.classList.add('location-menus', `location-menus--${variant}`);
+  for (const result of results) {
+    container.append(renderLocationMenu(result, variant));
+  }
+
+  return results;
+}
+
+function setAllSkeleton(container, variant) {
+  clear(container);
+  container.classList.remove('grid-menu', 'grid-menu--landing', 'grid-menu--tv');
+  container.classList.add('location-menus', `location-menus--${variant}`);
+  for (const loc of CONFIG.locations) {
+    container.append(el('section', { class: 'location-menu location-menu--loading' }, [
+      el('div', { class: 'location-menu__head' }, [
+        el('span', { class: 'location-menu__eyebrow' }, loc.id),
+        el('h3', { class: 'location-menu__title' }, loc.name),
+      ]),
+      el('div', { class: `grid-menu grid-menu--${variant}` }, [
+        el('div', { class: 'card card--skeleton' }, [
+          el('div', { class: 'skeleton skeleton--img' }),
+          el('div', { class: 'skeleton skeleton--line' }),
+          el('div', { class: 'skeleton skeleton--line short' }),
+        ]),
+      ]),
+    ]));
+  }
+}
+
+function renderLocationMenu(result, variant) {
+  const updatedAt = result.meta?.updatedAt ? new Date(result.meta.updatedAt) : null;
+  return el('section', { class: 'location-menu' }, [
+    el('div', { class: 'location-menu__head' }, [
+      el('span', { class: 'location-menu__eyebrow' }, result.loc.id),
+      el('h3', { class: 'location-menu__title' }, result.meta?.locationName || result.loc.name),
+      updatedAt ? el('span', { class: 'location-menu__updated' }, `Actualizado ${updatedAt.toLocaleTimeString('es-HN', { hour: '2-digit', minute: '2-digit' })}`) : null,
+    ]),
+    result.error ? renderInlineState('El menú de esta sucursal se está actualizando.', result.error.message)
+      : result.items.length === 0 ? renderInlineState('Aún no hay menú publicado para esta sucursal.', 'Vuelve en unos minutos.')
+        : el('div', { class: `grid-menu grid-menu--${variant}` }, result.items.map((item) => renderCard(item, variant))),
+  ]);
+}
+
+function renderInlineState(title, hint) {
+  return el('div', { class: 'state state--inline' }, [
+    el('p', { class: 'state__title' }, title),
+    hint ? el('p', { class: 'state__hint' }, hint) : null,
+  ]);
 }
 
 function setSkeleton(container, variant) {

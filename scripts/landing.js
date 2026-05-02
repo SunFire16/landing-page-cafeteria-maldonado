@@ -2,7 +2,7 @@
 
 import { CONFIG } from './config.js';
 import { getCurrentLocation, setCurrentLocation, onLocationChange, readLocationFromUrl } from './location.js';
-import { renderMenu } from './menu.js';
+import { renderAllMenus } from './menu.js';
 import { renderBestSellers } from './bestsellers.js';
 import { bindFeedbackForm } from './feedback.js';
 import { track } from './analytics.js';
@@ -54,7 +54,7 @@ async function loadDynamic() {
   if (menuRoot) menuRoot.dataset.loadingFor = getCurrentLocation().id;
   if (bestRoot) bestRoot.dataset.loadingFor = getCurrentLocation().id;
   await Promise.all([
-    menuRoot ? renderMenu(menuRoot, { variant: 'landing' }) : null,
+    menuRoot ? renderAllMenus(menuRoot, { variant: 'landing' }) : null,
     bestRoot ? renderBestSellers(bestRoot, { scope: 'location', limit: 6 }) : null,
   ]);
   if (currentLoad !== loadId) return;
