@@ -1,11 +1,11 @@
 // Entry point de la landing principal.
 
-import { CONFIG } from './config.js?v=20260502-unified-stock';
-import { getCurrentLocation, setCurrentLocation, onLocationChange, readLocationFromUrl } from './location.js?v=20260502-unified-stock';
-import { renderAllMenus } from './menu.js?v=20260502-unified-stock';
-import { renderBestSellers } from './bestsellers.js?v=20260502-unified-stock';
-import { bindFeedbackForm } from './feedback.js?v=20260502-unified-stock';
-import { track } from './analytics.js?v=20260502-unified-stock';
+import { CONFIG } from './config.js?v=20260502-unified-fit';
+import { getCurrentLocation, setCurrentLocation, onLocationChange, readLocationFromUrl } from './location.js?v=20260502-unified-fit';
+import { renderAllMenus } from './menu.js?v=20260502-unified-fit';
+import { renderBestSellers } from './bestsellers.js?v=20260502-unified-fit';
+import { bindFeedbackForm } from './feedback.js?v=20260502-unified-fit';
+import { track } from './analytics.js?v=20260502-unified-fit';
 
 readLocationFromUrl();
 let loadId = 0;
