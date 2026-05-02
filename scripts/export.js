@@ -2,7 +2,7 @@
 // Renderiza siempre a tamaño TV fijo (1920x1080) para que la salida
 // se vea limpia, sin recortes ni layout responsivo del viewport actual.
 
-import { fitVariantsToCards } from './menu.js?v=20260502-tv-dense9';
+import { fitVariantsToCards } from './menu.js?v=20260502-tv-dense10';
 
 const CDN = {
   html2canvas: 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js',
@@ -109,7 +109,7 @@ async function withTvDimensions(node, fn) {
 
   try {
     return await fn();
-  } restoreImgs();
+  } finally {
     node.setAttribute('style', prev.nodeStyle);
     document.body.style.overflow = prev.bodyOverflow;
     document.body.classList.remove('exporting');
