@@ -1,7 +1,7 @@
 // Cliente HTTP para los endpoints públicos de la landing.
 // Implementa: timeout, parsing seguro, normalización de errores y caché en memoria.
 
-import { CONFIG } from './config.js?v=20260502-tv-dense4';
+import { CONFIG } from './config.js?v=20260502-tv-dense5';
 
 const memoryCache = new Map();
 

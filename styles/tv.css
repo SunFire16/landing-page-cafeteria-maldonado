@@ -370,33 +370,32 @@ body.tv {
   grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
   grid-template-rows: repeat(var(--tv-rows, 2), minmax(0, 1fr)) !important;
   grid-auto-rows: minmax(0, 1fr) !important;
+  grid-auto-flow: row dense !important;
   align-content: stretch !important;
 }
-/* Solo modo 'dense' (mucho contenido): ocultamos imágenes para priorizar texto */
-.unified-menu-wrap--tv[data-density="dense"] .card__media,
-.unified-menu-wrap--tv[data-density="dense"] .stock-badge { display: none !important; }
-/* 'dense-image': imágenes pequeñas a la izquierda */
-.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--menu {
-  grid-template-rows: none !important;
-  grid-template-columns: 28% 1fr !important;
-  grid-row: auto !important;
-  height: 100%;
-  min-height: 0;
-}
-.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--menu.card--xl {
-  grid-template-columns: 16% 1fr !important;
-}
-.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--menu .card__media {
-  height: 100%;
-}
+/* Stock badge fuera; imágenes SIEMPRE visibles aunque sean mini */
+.unified-menu-wrap--tv[data-density="dense"] .stock-badge,
+.unified-menu-wrap--tv[data-density="dense-image"] .stock-badge { display: none !important; }
+/* En denso: imagen pequeña a la izquierda; en denso-imagen: un poco más grande */
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu,
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu.card--lg,
-.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu.card--xl {
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu.card--xl,
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--menu,
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--menu.card--lg,
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--menu.card--xl {
   grid-template-rows: none !important;
-  grid-template-columns: 1fr !important;
+  grid-template-columns: var(--media-w, 22%) 1fr !important;
   grid-row: auto !important;
   height: 100%;
   min-height: 0;
+}
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu { --media-w: 18%; }
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu.card--xl { --media-w: 12%; }
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--menu { --media-w: 26%; }
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--menu.card--xl { --media-w: 14%; }
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu .card__media,
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--menu .card__media {
+  height: 100%;
 }
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu .card__body,
 .unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--menu .card__body {
@@ -443,21 +442,12 @@ body.tv {
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card__desc,
 .unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card__desc { display: none; }
 
-/* Distribución de spans según cantidad de productos */
-.unified-menu-wrap--tv[data-density="dense"][data-products="3"] .unified-menu--tv .card--menu,
-.unified-menu-wrap--tv[data-density="dense-image"][data-products="3"] .unified-menu--tv .card--menu { grid-column: span 4 !important; }
-.unified-menu-wrap--tv[data-density="dense"][data-products="4"] .unified-menu--tv .card--menu,
-.unified-menu-wrap--tv[data-density="dense-image"][data-products="4"] .unified-menu--tv .card--menu { grid-column: span 6 !important; }
-.unified-menu-wrap--tv[data-density="dense"][data-products="5"] .unified-menu--tv .card--menu,
-.unified-menu-wrap--tv[data-density="dense"][data-products="6"] .unified-menu--tv .card--menu,
-.unified-menu-wrap--tv[data-density="dense-image"][data-products="5"] .unified-menu--tv .card--menu,
-.unified-menu-wrap--tv[data-density="dense-image"][data-products="6"] .unified-menu--tv .card--menu { grid-column: span 4 !important; }
-.unified-menu-wrap--tv[data-density="dense"][data-products="7"] .unified-menu--tv .card--menu,
-.unified-menu-wrap--tv[data-density="dense"][data-products="8"] .unified-menu--tv .card--menu { grid-column: span 3 !important; }
-.unified-menu-wrap--tv[data-density="dense"][data-products="9"] .unified-menu--tv .card--menu,
-.unified-menu-wrap--tv[data-density="dense"][data-products="10"] .unified-menu--tv .card--menu,
-.unified-menu-wrap--tv[data-density="dense"][data-products="11"] .unified-menu--tv .card--menu,
-.unified-menu-wrap--tv[data-density="dense"][data-products="12"] .unified-menu--tv .card--menu { grid-column: span 3 !important; }
+/* Cada card se distribuye con su span propio, calculado según cuántas variantes tiene
+   (más variantes → más ancho; sin variantes → delgado). Se setea via --card-span en JS. */
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu,
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--menu {
+  grid-column: span var(--card-span, 6) !important;
+}
 /* XL siempre fila completa para mostrar todas sus variantes en horizontal */
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu.card--xl,
 .unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--menu.card--xl { grid-column: 1 / -1 !important; }
@@ -483,48 +473,50 @@ body.tv {
 .tv-state__title { font-weight: 700; font-size: 1.4rem; }
 .tv-state__hint { color: rgba(255,255,255,0.7); margin-top: 4px; }
 
-/* ---------- Dock flotante ---------- */
+/* ---------- Dock flotante: discreto, una sola columna vertical ---------- */
 .tv-dock {
   position: fixed;
-  right: 18px; bottom: 18px;
+  right: 10px; bottom: 10px;
   z-index: 100;
   display: flex; flex-direction: column-reverse;
-  align-items: flex-end; gap: 10px;
+  align-items: flex-end; gap: 6px;
 }
 .tv-dock__toggle {
-  width: 48px; height: 48px;
+  width: 28px; height: 28px;
   border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.18);
-  background: rgba(42,24,16,0.78);
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(42,24,16,0.55);
   color: #f4c97a;
-  font-size: 1.4rem; line-height: 1;
+  font-size: 0.85rem; line-height: 1;
   cursor: pointer;
-  box-shadow: 0 12px 28px rgba(0,0,0,0.45);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  opacity: 0.45;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0.18;
   transition: opacity .2s, transform .2s;
+  padding: 0;
 }
 .tv-dock__toggle:hover,
 .tv-dock--open .tv-dock__toggle { opacity: 1; transform: scale(1.05); }
+/* Menú de exportación: vertical (columna), no se expande lateralmente */
 .tv-dock__menu {
-  display: flex; gap: 8px;
+  display: flex; flex-direction: column; gap: 6px;
   background: rgba(42,24,16,0.82);
-  padding: 8px;
-  border-radius: 999px;
+  padding: 6px;
+  border-radius: 18px;
   border: 1px solid rgba(255,255,255,0.18);
-  box-shadow: 0 14px 32px rgba(0,0,0,0.45);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.45);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
 .tv-dock__btn {
-  width: 40px; height: 40px;
+  width: 32px; height: 32px;
   display: inline-flex; align-items: center; justify-content: center;
   border-radius: 50%;
   border: 1px solid rgba(255,255,255,0.16);
   background: rgba(255,255,255,0.06);
   color: #fff;
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   cursor: pointer;
   text-decoration: none;
 }

@@ -1,9 +1,9 @@
 // Render del bloque "Menú del día" (landing) y para Modo TV.
 
-import { getMenuDelDia } from './api.js?v=20260502-tv-dense4';
-import { CONFIG } from './config.js?v=20260502-tv-dense4';
-import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-tv-dense4';
-import { getCurrentLocation } from './location.js?v=20260502-tv-dense4';
+import { getMenuDelDia } from './api.js?v=20260502-tv-dense5';
+import { CONFIG } from './config.js?v=20260502-tv-dense5';
+import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-tv-dense5';
+import { getCurrentLocation } from './location.js?v=20260502-tv-dense5';
 
 export async function renderMenu(container, { variant = 'landing' } = {}) {
   const loc = getCurrentLocation();
@@ -57,11 +57,11 @@ export async function renderAllMenus(container, { variant = 'landing' } = {}) {
     const totalVariants = products.reduce((sum, p) => sum + Math.max(p.variants?.length || 1, 1), 0);
     // Niveles de densidad para TV:
     //  - 'normal': pocos productos, layout grande con imágenes
-    //  - 'dense-image': moderado (4-6 productos, máx 1 XL) → mantener imágenes pequeñas
-    //  - 'dense': mucho contenido → sin imágenes, todo texto grande
+    //  - 'dense-image': moderado → mantener imágenes pequeñas
+    //  - 'dense': mucho contenido → imágenes mini (siguen presentes para no verse muerto)
     let density = 'normal';
     if (variant === 'tv') {
-      const heavy = products.length >= 7 || totalVariants >= 18 || xlCount >= 2;
+      const heavy = products.length >= 7 || totalVariants >= 22;
       const moderate = products.length >= 4 || totalVariants >= 14 || xlCount >= 1;
       if (heavy) density = 'dense';
       else if (moderate) density = 'dense-image';
@@ -71,18 +71,56 @@ export async function renderAllMenus(container, { variant = 'landing' } = {}) {
     container.dataset.xlCount = String(xlCount);
     container.dataset.density = density;
     container.dataset.products = String(products.length);
-    // Calcula filas equivalentes para el grid denso
-    if (dense) {
-      const perRow = compactCount >= 7 ? 4 : compactCount >= 5 ? 3 : compactCount >= 3 ? 3 : 2;
-      const compactRows = Math.max(Math.ceil(compactCount / perRow), 0);
-      const totalRows = compactRows + xlCount;
-      container.style.setProperty('--tv-rows', String(totalRows || 1));
-      container.style.setProperty('--tv-per-row', String(perRow));
-    } else {
-      container.style.removeProperty('--tv-rows');
-      container.style.removeProperty('--tv-per-row');
-    }
-    fragment.append(el('div', { class: `unified-menu unified-menu--${variant}` }, products.map((item) => renderCard(item, variant))));
+
+    // Distribución dinámica: cada card recibe un "peso" según cuántas variantes tiene.
+    // Las cards con poco contenido se hacen más delgadas para dejar espacio a las grandes.
+    const weightOf = (p) => {
+      const v = p.variants?.length || 0;
+      if (v >= 7) return 12;       // XL: fila completa
+      if (v >= 5) return 8;        // grande
+      if (v >= 3) return 6;        // media
+      if (v >= 1) return 4;        // pequeña con variantes
+      return 3;                    // sin variantes: lo más delgado
+    };
+    const weights = products.map(weightOf);
+    // Empacado simple en filas de ancho 12: ajusta el último de cada fila para llenar.
+    const rows = [];
+    let row = [];
+    let rowSum = 0;
+    weights.forEach((w, idx) => {
+      if (w >= 12) { if (row.length) rows.push(row); rows.push([{ idx, w: 12 }]); row = []; rowSum = 0; return; }
+      if (rowSum + w > 12) { rows.push(row); row = []; rowSum = 0; }
+      row.push({ idx, w });
+      rowSum += w;
+    });
+    if (row.length) rows.push(row);
+    // Reparte el sobrante de cada fila proporcionalmente para llenar 12.
+    const finalSpans = new Array(products.length);
+    rows.forEach((r) => {
+      const sum = r.reduce((s, c) => s + c.w, 0);
+      if (sum === 12) { r.forEach(c => { finalSpans[c.idx] = c.w; }); return; }
+      const factor = 12 / sum;
+      let assigned = 0;
+      r.forEach((c, i) => {
+        const isLast = i === r.length - 1;
+        const span = isLast ? (12 - assigned) : Math.max(2, Math.round(c.w * factor));
+        finalSpans[c.idx] = span;
+        assigned += span;
+      });
+    });
+    container.dataset.totalRows = String(rows.length);
+    container.style.setProperty('--tv-rows', String(rows.length || 1));
+
+    fragment.append(el('div', { class: `unified-menu unified-menu--${variant}` }, products.map((item, idx) => {
+      const card = renderCard(item, variant);
+      if (variant === 'tv') {
+        const span = finalSpans[idx] || 6;
+        card.style.setProperty('--card-span', String(span));
+        card.dataset.variantCount = String(item.variants?.length || 0);
+        card.dataset.weight = String(weights[idx]);
+      }
+      return card;
+    })));
   }
   // Swap atómico: limpiamos justo antes de insertar para evitar el flash.
   clear(container);
