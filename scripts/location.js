@@ -1,6 +1,6 @@
 // Manejo de la sucursal activa: persistencia, eventos y validación.
 
-import { CONFIG, getLocationById } from './config.js?v=20260502-tv-text';
+import { CONFIG, getLocationById } from './config.js?v=20260502-tv-bigger';
 
 const STORAGE_KEY = CONFIG.ui.locationStorageKey;
 

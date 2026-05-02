@@ -1,8 +1,8 @@
 // Render de productos más vendidos con scope local o global.
 
-import { getBestSellers } from './api.js?v=20260502-tv-text';
-import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-tv-text';
-import { getCurrentLocation } from './location.js?v=20260502-tv-text';
+import { getBestSellers } from './api.js?v=20260502-tv-bigger';
+import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-tv-bigger';
+import { getCurrentLocation } from './location.js?v=20260502-tv-bigger';
 
 export async function renderBestSellers(container, { scope = 'location', limit = 6 } = {}) {
   const loc = getCurrentLocation();

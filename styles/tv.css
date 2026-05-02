@@ -194,15 +194,15 @@ body.tv {
 }
 .unified-menu--tv .card__title {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(1.4rem, 1.6vw, 2rem);
+  font-size: clamp(1.8rem, 2.1vw, 2.6rem);
   line-height: 1.05;
   color: #3a2113;
   font-weight: 800;
   margin: 0;
   flex: none;
 }
-.unified-menu--tv .card--lg .card__title { font-size: clamp(1.25rem, 1.4vw, 1.7rem); }
-.unified-menu--tv .card--xl .card__title { font-size: clamp(1.15rem, 1.25vw, 1.5rem); }
+.unified-menu--tv .card--lg .card__title { font-size: clamp(1.55rem, 1.7vw, 2.1rem); }
+.unified-menu--tv .card--xl .card__title { font-size: clamp(1.35rem, 1.45vw, 1.8rem); }
 
 .unified-menu--tv .card__desc {
   display: -webkit-box;
@@ -210,7 +210,7 @@ body.tv {
   -webkit-box-orient: vertical;
   overflow: hidden;
   color: #6b4a32;
-  font-size: clamp(0.85rem, 0.9vw, 1rem);
+  font-size: clamp(1rem, 1.05vw, 1.2rem);
   line-height: 1.25;
   margin: 0;
   flex: none;
@@ -223,13 +223,13 @@ body.tv {
 }
 .unified-menu--tv .card__price {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(1.25rem, 1.35vw, 1.6rem);
+  font-size: clamp(1.55rem, 1.65vw, 2rem);
   color: #6b3f1d; font-weight: 800;
 }
 .unified-menu--tv .tag {
   background: rgba(107,63,29,0.10); color: #6b3f1d;
-  font-weight: 700; font-size: 0.85rem;
-  padding: 4px 10px; border-radius: 999px;
+  font-weight: 700; font-size: 1rem;
+  padding: 5px 12px; border-radius: 999px;
 }
 
 /* Stock badge sobre la imagen */
@@ -255,14 +255,14 @@ body.tv {
 /* ---------- Disponibilidad por local ---------- */
 .unified-menu--tv .location-statuses { gap: 8px; flex-wrap: wrap; flex: none; }
 .unified-menu--tv .location-status {
-  font-size: 0.95rem;
-  padding: 5px 12px;
+  font-size: 1.1rem;
+  padding: 6px 14px;
   border-radius: 999px;
   font-weight: 800;
   letter-spacing: 0.02em;
 }
-.unified-menu--tv .card--lg .location-status,
-.unified-menu--tv .card--xl .location-status { font-size: 0.85rem; padding: 4px 10px; }
+.unified-menu--tv .card--lg .location-status { font-size: 1rem; padding: 5px 12px; }
+.unified-menu--tv .card--xl .location-status { font-size: 0.9rem; padding: 4px 10px; }
 .unified-menu--tv .location-status--yes { color: #1f8a4c; background: rgba(31,138,76,0.12); border-color: rgba(31,138,76,0.22); }
 .unified-menu--tv .location-status--no  { color: #b23a3a; background: rgba(178,58,58,0.12); border-color: rgba(178,58,58,0.22); }
 .unified-menu--tv .location-status__mark { font-size: 1em; }
@@ -270,10 +270,10 @@ body.tv {
 /* ---------- Variantes ---------- */
 .unified-menu--tv .variants {
   display: grid;
-  gap: 6px 10px;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px 12px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   margin-top: 4px;
-  padding-top: 8px;
+  padding-top: 10px;
   border-top: 1px solid rgba(107,63,29,0.18);
   min-height: 0;
   overflow: hidden;
@@ -281,25 +281,25 @@ body.tv {
   align-content: start;
 }
 .unified-menu--tv .card--lg .variants {
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
 }
 .unified-menu--tv .card--xl .variants {
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 4px 8px;
+  grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+  gap: 5px 8px;
 }
 .unified-menu--tv .variant {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
   align-items: stretch;
-  font-size: 0.95rem;
-  padding: 6px 10px;
+  font-size: 1.15rem;
+  padding: 8px 12px;
   background: rgba(107,63,29,0.05);
-  border-radius: 10px;
+  border-radius: 12px;
   min-width: 0;
 }
-.unified-menu--tv .card--lg .variant { font-size: 0.85rem; padding: 5px 9px; }
-.unified-menu--tv .card--xl .variant { font-size: 0.78rem; padding: 4px 8px; gap: 2px; }
+.unified-menu--tv .card--lg .variant { font-size: 1rem; padding: 6px 10px; gap: 3px; }
+.unified-menu--tv .card--xl .variant { font-size: 0.85rem; padding: 5px 9px; gap: 2px; border-radius: 10px; }
 .unified-menu--tv .variant__name {
   font-weight: 700; color: #3a2113;
   white-space: normal; overflow: visible; text-overflow: clip;
