@@ -307,16 +307,16 @@ body.tv {
 .unified-menu--tv .variant {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--variant-gap, 4px);
   align-items: stretch;
-  font-size: 1.15rem;
-  padding: 8px 12px;
+  font-size: calc(1.15rem * var(--variant-fs, 1));
+  padding: var(--variant-pad, 8px 12px);
   background: rgba(107,63,29,0.05);
   border-radius: 12px;
   min-width: 0;
 }
-.unified-menu--tv .card--lg .variant { font-size: 1rem; padding: 6px 10px; gap: 3px; }
-.unified-menu--tv .card--xl .variant { font-size: 0.85rem; padding: 5px 9px; gap: 2px; border-radius: 10px; }
+.unified-menu--tv .card--lg .variant { font-size: calc(1rem * var(--variant-fs, 1)); padding: var(--variant-pad, 6px 10px); gap: var(--variant-gap, 3px); }
+.unified-menu--tv .card--xl .variant { font-size: calc(0.85rem * var(--variant-fs, 1)); padding: var(--variant-pad, 5px 9px); gap: var(--variant-gap, 2px); border-radius: 10px; }
 .unified-menu--tv .variant__name {
   font-weight: 700; color: #3a2113;
   white-space: normal; overflow: visible; text-overflow: clip;
@@ -338,16 +338,32 @@ body.tv {
   text-decoration: line-through;
 }
 
-/* ---------- Modo DENSO: muchos productos, sin imágenes, todo en texto grande ---------- */
-.unified-menu-wrap--tv[data-density="dense"] {
+/* ---------- Modo DENSO (común a 'dense' y 'dense-image') ---------- */
+.unified-menu-wrap--tv[data-density="dense"],
+.unified-menu-wrap--tv[data-density="dense-image"] {
   display: grid !important;
   grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
   grid-template-rows: repeat(var(--tv-rows, 2), minmax(0, 1fr)) !important;
   grid-auto-rows: minmax(0, 1fr) !important;
   align-content: stretch !important;
 }
+/* Solo modo 'dense' (mucho contenido): ocultamos imágenes para priorizar texto */
 .unified-menu-wrap--tv[data-density="dense"] .card__media,
 .unified-menu-wrap--tv[data-density="dense"] .stock-badge { display: none !important; }
+/* 'dense-image': imágenes pequeñas a la izquierda */
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--menu {
+  grid-template-rows: none !important;
+  grid-template-columns: 28% 1fr !important;
+  grid-row: auto !important;
+  height: 100%;
+  min-height: 0;
+}
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--menu.card--xl {
+  grid-template-columns: 16% 1fr !important;
+}
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--menu .card__media {
+  height: 100%;
+}
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu,
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu.card--lg,
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu.card--xl {
@@ -357,28 +373,34 @@ body.tv {
   height: 100%;
   min-height: 0;
 }
-.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu .card__body {
-  padding: 14px 18px;
-  gap: 8px;
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu .card__body,
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--menu .card__body {
+  padding: 12px 16px;
+  gap: 6px;
   height: 100%;
   min-height: 0;
   overflow: hidden;
 }
-.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card__title {
-  font-size: clamp(1.4rem, 1.7vw, 2.2rem) !important;
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card__title,
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card__title {
+  font-size: clamp(1.3rem, 1.6vw, 2rem) !important;
   margin: 0;
 }
 /* Cuando hay variantes, ocultar la fila inferior de precio "Desde" (las variantes ya lo muestran) */
-.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--has-variants .card__row { display: none !important; }
-.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card__price {
-  font-size: clamp(1.4rem, 1.5vw, 1.9rem) !important;
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--has-variants .card__row,
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--has-variants .card__row { display: none !important; }
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card__price,
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card__price {
+  font-size: clamp(1.3rem, 1.4vw, 1.8rem) !important;
 }
-.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .location-status {
-  font-size: 1rem !important;
-  padding: 4px 11px !important;
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .location-status,
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .location-status {
+  font-size: 0.95rem !important;
+  padding: 3px 10px !important;
 }
-.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .variants {
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .variants,
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .variants {
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important;
   gap: 6px 8px !important;
   padding-top: 8px !important;
   margin-top: 4px !important;
@@ -386,19 +408,25 @@ body.tv {
   min-height: 0;
   overflow: hidden;
 }
-.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .variant {
-  font-size: 1rem !important;
-  padding: 6px 10px !important;
-  gap: 2px !important;
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .variant,
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .variant {
+  font-size: calc(1rem * var(--variant-fs, 1)) !important;
+  padding: var(--variant-pad, 6px 10px) !important;
+  gap: var(--variant-gap, 2px) !important;
   border-radius: 10px;
 }
-.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card__desc { display: none; }
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card__desc,
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card__desc { display: none; }
 
 /* Distribución de spans según cantidad de productos */
-.unified-menu-wrap--tv[data-density="dense"][data-products="3"] .unified-menu--tv .card--menu { grid-column: span 4 !important; }
-.unified-menu-wrap--tv[data-density="dense"][data-products="4"] .unified-menu--tv .card--menu { grid-column: span 6 !important; }
+.unified-menu-wrap--tv[data-density="dense"][data-products="3"] .unified-menu--tv .card--menu,
+.unified-menu-wrap--tv[data-density="dense-image"][data-products="3"] .unified-menu--tv .card--menu { grid-column: span 4 !important; }
+.unified-menu-wrap--tv[data-density="dense"][data-products="4"] .unified-menu--tv .card--menu,
+.unified-menu-wrap--tv[data-density="dense-image"][data-products="4"] .unified-menu--tv .card--menu { grid-column: span 6 !important; }
 .unified-menu-wrap--tv[data-density="dense"][data-products="5"] .unified-menu--tv .card--menu,
-.unified-menu-wrap--tv[data-density="dense"][data-products="6"] .unified-menu--tv .card--menu { grid-column: span 4 !important; }
+.unified-menu-wrap--tv[data-density="dense"][data-products="6"] .unified-menu--tv .card--menu,
+.unified-menu-wrap--tv[data-density="dense-image"][data-products="5"] .unified-menu--tv .card--menu,
+.unified-menu-wrap--tv[data-density="dense-image"][data-products="6"] .unified-menu--tv .card--menu { grid-column: span 4 !important; }
 .unified-menu-wrap--tv[data-density="dense"][data-products="7"] .unified-menu--tv .card--menu,
 .unified-menu-wrap--tv[data-density="dense"][data-products="8"] .unified-menu--tv .card--menu { grid-column: span 3 !important; }
 .unified-menu-wrap--tv[data-density="dense"][data-products="9"] .unified-menu--tv .card--menu,
@@ -406,7 +434,8 @@ body.tv {
 .unified-menu-wrap--tv[data-density="dense"][data-products="11"] .unified-menu--tv .card--menu,
 .unified-menu-wrap--tv[data-density="dense"][data-products="12"] .unified-menu--tv .card--menu { grid-column: span 3 !important; }
 /* XL siempre fila completa para mostrar todas sus variantes en horizontal */
-.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu.card--xl { grid-column: 1 / -1 !important; }
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu.card--xl,
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--menu.card--xl { grid-column: 1 / -1 !important; }
 
 .unified-menu--tv .variant-locations { gap: 5px; }
 .unified-menu--tv .variant-location {

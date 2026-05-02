@@ -1,9 +1,9 @@
 // Render del bloque "Menú del día" (landing) y para Modo TV.
 
-import { getMenuDelDia } from './api.js?v=20260502-tv-dense2';
-import { CONFIG } from './config.js?v=20260502-tv-dense2';
-import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-tv-dense2';
-import { getCurrentLocation } from './location.js?v=20260502-tv-dense2';
+import { getMenuDelDia } from './api.js?v=20260502-tv-dense3';
+import { CONFIG } from './config.js?v=20260502-tv-dense3';
+import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-tv-dense3';
+import { getCurrentLocation } from './location.js?v=20260502-tv-dense3';
 
 export async function renderMenu(container, { variant = 'landing' } = {}) {
   const loc = getCurrentLocation();
@@ -55,14 +55,23 @@ export async function renderAllMenus(container, { variant = 'landing' } = {}) {
     const compactCount = products.filter((p) => (p.variants?.length || 0) < 7).length;
     const xlCount = products.length - compactCount;
     const totalVariants = products.reduce((sum, p) => sum + Math.max(p.variants?.length || 1, 1), 0);
-    // Modo "denso": cuando hay tanto contenido que conviene priorizar el texto.
-    // Sin imágenes, todo en grande.
-    const dense = variant === 'tv' && (products.length >= 4 || totalVariants >= 14 || xlCount >= 2);
+    // Niveles de densidad para TV:
+    //  - 'normal': pocos productos, layout grande con imágenes
+    //  - 'dense-image': moderado (4-6 productos, máx 1 XL) → mantener imágenes pequeñas
+    //  - 'dense': mucho contenido → sin imágenes, todo texto grande
+    let density = 'normal';
+    if (variant === 'tv') {
+      const heavy = products.length >= 7 || totalVariants >= 18 || xlCount >= 2;
+      const moderate = products.length >= 4 || totalVariants >= 14 || xlCount >= 1;
+      if (heavy) density = 'dense';
+      else if (moderate) density = 'dense-image';
+    }
+    const dense = density === 'dense' || density === 'dense-image';
     container.dataset.compactCount = String(compactCount);
     container.dataset.xlCount = String(xlCount);
-    container.dataset.density = dense ? 'dense' : 'normal';
+    container.dataset.density = density;
     container.dataset.products = String(products.length);
-    // Calcula filas equivalentes para el grid denso (3 compactas por fila + 1 fila por XL)
+    // Calcula filas equivalentes para el grid denso
     if (dense) {
       const perRow = compactCount >= 7 ? 4 : compactCount >= 5 ? 3 : compactCount >= 3 ? 3 : 2;
       const compactRows = Math.max(Math.ceil(compactCount / perRow), 0);
@@ -79,7 +88,43 @@ export async function renderAllMenus(container, { variant = 'landing' } = {}) {
   clear(container);
   container.append(fragment);
 
+  // Seguro infalible: tras pintar, achicamos la tipografía de las variantes
+  // dentro de cada card hasta que quepan completas (sin overflow vertical).
+  if (variant === 'tv') {
+    requestAnimationFrame(() => fitVariantsToCards(container));
+  }
+
   return results;
+}
+
+function fitVariantsToCards(container) {
+  const cards = container.querySelectorAll('.card--menu');
+  cards.forEach((card) => {
+    const variantsBox = card.querySelector('.variants');
+    if (!variantsBox) return;
+    // Reset previo
+    card.style.removeProperty('--variant-fs');
+    card.style.removeProperty('--variant-pad');
+    card.style.removeProperty('--variant-gap');
+    // Escalas progresivas (font-size, padding, gap) hasta que quepa
+    const scales = [
+      { fs: 1,    pad: null,        gap: null },
+      { fs: 0.92, pad: '5px 9px',   gap: '3px 8px' },
+      { fs: 0.82, pad: '4px 8px',   gap: '3px 6px' },
+      { fs: 0.72, pad: '3px 7px',   gap: '2px 6px' },
+      { fs: 0.64, pad: '3px 6px',   gap: '2px 5px' },
+      { fs: 0.56, pad: '2px 5px',   gap: '2px 4px' },
+      { fs: 0.50, pad: '2px 4px',   gap: '1px 4px' },
+    ];
+    let i = 0;
+    while (i < scales.length - 1 && (variantsBox.scrollHeight - variantsBox.clientHeight > 2)) {
+      i += 1;
+      const s = scales[i];
+      card.style.setProperty('--variant-fs', String(s.fs));
+      if (s.pad) card.style.setProperty('--variant-pad', s.pad);
+      if (s.gap) card.style.setProperty('--variant-gap', s.gap);
+    }
+  });
 }
 
 function mergeMenuResults(results) {
