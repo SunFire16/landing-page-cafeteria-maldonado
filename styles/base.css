@@ -45,6 +45,8 @@ body {
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Evita scroll horizontal accidental por hijos que se desborden en mobile */
+  overflow-x: hidden;
 }
 
 img { max-width: 100%; display: block; }

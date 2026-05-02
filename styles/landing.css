@@ -1,5 +1,14 @@
 /* Estilos específicos de la landing principal */
 
+/* Fondo cálido tipo TV (sutil, no invasivo) */
+body {
+  background:
+    radial-gradient(900px 600px at 90% -10%, rgba(212,162,76,0.18), transparent 55%),
+    radial-gradient(800px 600px at -10% 100%, rgba(107,63,29,0.10), transparent 55%),
+    var(--color-bg);
+  background-attachment: fixed;
+}
+
 /* Header */
 .site-header {
   position: sticky; top: 0; z-index: 50;
@@ -8,13 +17,13 @@
   -webkit-backdrop-filter: saturate(140%) blur(10px);
   border-bottom: 1px solid var(--color-line);
 }
-.site-header__inner { display: flex; align-items: center; gap: 16px; padding: 10px 0; }
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--color-coffee-dark); }
-.brand__logo { width: 42px; height: 42px; border-radius: 50%; box-shadow: var(--shadow-sm); background: #fff; }
-.brand__name { font-family: var(--font-display); font-size: 1.05rem; letter-spacing: 0.01em; }
+.site-header__inner { display: flex; align-items: center; gap: 16px; padding: 10px 0; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--color-coffee-dark); min-width: 0; }
+.brand__logo { width: 42px; height: 42px; border-radius: 50%; box-shadow: var(--shadow-sm); background: #fff; flex: none; }
+.brand__name { font-family: var(--font-display); font-size: 1.05rem; letter-spacing: 0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .site-header__spacer { flex: 1; }
-.location-switch { display: flex; align-items: center; gap: 8px; }
-.location-switch label { font-size: 0.85rem; color: var(--color-muted); }
+.location-switch { display: flex; align-items: center; gap: 8px; min-width: 0; max-width: 100%; }
+.location-switch label { font-size: 0.85rem; color: var(--color-muted); flex: none; }
 .location-switch select {
   appearance: none; -webkit-appearance: none;
   border: 1px solid var(--color-line); background: var(--color-surface);
@@ -23,6 +32,11 @@
   background-image: linear-gradient(45deg, transparent 50%, var(--color-coffee) 50%), linear-gradient(135deg, var(--color-coffee) 50%, transparent 50%);
   background-position: calc(100% - 16px) 14px, calc(100% - 11px) 14px;
   background-size: 5px 5px, 5px 5px; background-repeat: no-repeat;
+  /* Evita que el select se desborde y cause scroll horizontal en mobile */
+  max-width: 100%;
+  min-width: 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 /* Hero */
@@ -128,3 +142,9 @@
 /* Footer */
 .site-footer { padding: 28px 0 40px; color: var(--color-muted); font-size: 0.9rem; text-align: center; }
 .site-footer a { color: var(--color-coffee); }
+
+/* ---------- Look premium para cards de men\u00fa en la landing ---------- */
+.section--tight .unified-menu .card--menu {
+  background: linear-gradient(180deg, #ffffff, #fff8ec);
+  border: 1px solid rgba(212,162,76,0.22);
+  box-shadow: 0 8px 24px rgba(42,24,16,0.10), inset 0 1px 0 rgba(255,255,255,0.6);\n}\n.section--tight .unified-menu .card--menu .card__title {\n  font-family: var(--font-display);\n  font-size: 1.18rem;\n  color: var(--color-coffee-dark);\n}\n.section--tight .unified-menu .card--menu .card__price {\n  font-family: var(--font-display);\n  color: var(--color-coffee);\n  font-size: 1.15rem;\n}\n.section--tight .unified-menu .card--menu .stock-badge {\n  background: rgba(31,138,76,0.95);\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  font-size: 0.7rem;\n}\n.section--tight .unified-menu .card--menu .stock-badge--out { background: rgba(178,58,58,0.95); }\n.section--tight .unified-menu .card--menu:hover {\n  transform: translateY(-3px);\n  border-color: rgba(212,162,76,0.45);\n  box-shadow: 0 14px 32px rgba(42,24,16,0.18), inset 0 1px 0 rgba(255,255,255,0.7);\n}\n\n/* Best sellers tambi\u00e9n con look premium */\n.grid-best .card--best {\n  background: linear-gradient(180deg, #ffffff, #fff8ec);\n  border: 1px solid rgba(212,162,76,0.22);\n  box-shadow: 0 8px 24px rgba(42,24,16,0.10);\n}\n.grid-best .card--best .card__title { font-family: var(--font-display); color: var(--color-coffee-dark); }\n.grid-best .card--best .card__price { color: var(--color-coffee); font-weight: 800; }\n\n/* Hero: peque\u00f1os refinamientos */\n.hero__title em { background: linear-gradient(120deg, var(--color-coffee), var(--color-gold)); -webkit-background-clip: text; background-clip: text; color: transparent; }\n\n/* ---------- Responsive: header / selector de local en m\u00f3vil ---------- */\n@media (max-width: 640px) {\n  .site-header__inner { gap: 10px; padding: 10px 0; }\n  .brand__name { font-size: 0.98rem; max-width: 38vw; }\n  .site-header__spacer { display: none; }\n  /* Selector toma todo el ancho restante en una segunda fila si hace falta */\n  .location-switch {\n    flex: 1 1 100%;\n    width: 100%;\n    order: 3;\n    margin-top: 4px;\n  }\n  .location-switch label { font-size: 0.78rem; }\n  .location-switch select {\n    flex: 1 1 auto;\n    width: 100%;\n    font-size: 0.92rem;\n    padding: 9px 30px 9px 12px;\n  }\n  /* Hero CTAs apilados sin desbordar */\n  .hero__ctas .btn { width: 100%; justify-content: center; }\n  .hero__meta { gap: 12px; }\n}\n\n@media (max-width: 420px) {\n  .brand__name { display: none; }\n}
