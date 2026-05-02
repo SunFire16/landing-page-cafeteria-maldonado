@@ -1,9 +1,9 @@
 // Render del bloque "Menú del día" (landing) y para Modo TV.
 
-import { getMenuDelDia } from './api.js?v=20260502-tv-allvar3';
-import { CONFIG } from './config.js?v=20260502-tv-allvar3';
-import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-tv-allvar3';
-import { getCurrentLocation } from './location.js?v=20260502-tv-allvar3';
+import { getMenuDelDia } from './api.js?v=20260502-tv-dense';
+import { CONFIG } from './config.js?v=20260502-tv-dense';
+import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-tv-dense';
+import { getCurrentLocation } from './location.js?v=20260502-tv-dense';
 
 export async function renderMenu(container, { variant = 'landing' } = {}) {
   const loc = getCurrentLocation();
@@ -54,8 +54,14 @@ export async function renderAllMenus(container, { variant = 'landing' } = {}) {
   } else {
     const compactCount = products.filter((p) => (p.variants?.length || 0) < 7).length;
     const xlCount = products.length - compactCount;
+    const totalVariants = products.reduce((sum, p) => sum + Math.max(p.variants?.length || 1, 1), 0);
+    // Modo "denso": cuando hay tanto contenido que conviene priorizar el texto.
+    // Sin imágenes, todo en grande.
+    const dense = variant === 'tv' && (products.length >= 4 || totalVariants >= 14 || xlCount >= 2);
     container.dataset.compactCount = String(compactCount);
     container.dataset.xlCount = String(xlCount);
+    container.dataset.density = dense ? 'dense' : 'normal';
+    container.dataset.products = String(products.length);
     fragment.append(el('div', { class: `unified-menu unified-menu--${variant}` }, products.map((item) => renderCard(item, variant))));
   }
   // Swap atómico: limpiamos justo antes de insertar para evitar el flash.

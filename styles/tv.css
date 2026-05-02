@@ -338,6 +338,57 @@ body.tv {
   text-decoration: line-through;
 }
 
+/* ---------- Modo DENSO: muchos productos, sin imágenes, todo en texto grande ---------- */
+.unified-menu-wrap--tv[data-density="dense"] .card__media { display: none !important; }
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu,
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu.card--lg,
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu.card--xl {
+  grid-template-rows: none !important;
+  grid-template-columns: 1fr !important;
+  grid-row: auto !important;
+}
+.unified-menu-wrap--tv[data-density="dense"] .tv-grid.unified-menu-wrap,
+.unified-menu-wrap--tv[data-density="dense"] {
+  grid-template-rows: 1fr !important;
+}
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu .card__body {
+  padding: 18px 22px;
+  gap: 10px;
+  height: 100%;
+}
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card__title {
+  font-size: clamp(1.6rem, 1.9vw, 2.4rem) !important;
+}
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card__price {
+  font-size: clamp(1.5rem, 1.6vw, 2rem) !important;
+}
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .location-status {
+  font-size: 1rem !important;
+  padding: 5px 12px !important;
+}
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .variants {
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
+  gap: 6px 10px !important;
+  padding-top: 10px !important;
+}
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .variant {
+  font-size: 1.05rem !important;
+  padding: 7px 11px !important;
+  gap: 3px !important;
+}
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card__desc { display: none; }
+.unified-menu-wrap--tv[data-density="dense"] .stock-badge { display: none; }
+
+/* Spans para modo denso por cantidad de productos */
+.unified-menu-wrap--tv[data-density="dense"][data-products="4"] .unified-menu--tv .card--menu { grid-column: span 6 !important; }
+.unified-menu-wrap--tv[data-density="dense"][data-products="5"] .unified-menu--tv .card--menu,
+.unified-menu-wrap--tv[data-density="dense"][data-products="6"] .unified-menu--tv .card--menu { grid-column: span 4 !important; }
+.unified-menu-wrap--tv[data-density="dense"][data-products="7"] .unified-menu--tv .card--menu,
+.unified-menu-wrap--tv[data-density="dense"][data-products="8"] .unified-menu--tv .card--menu { grid-column: span 3 !important; }
+.unified-menu-wrap--tv[data-density="dense"][data-products="3"] .unified-menu--tv .card--menu { grid-column: span 4 !important; }
+/* Cuando hay XL en modo denso, ese producto siempre toma fila completa para mostrar todas sus variantes */
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu.card--xl { grid-column: 1 / -1 !important; }
+
 .unified-menu--tv .variant-locations { gap: 5px; }
 .unified-menu--tv .variant-location {
   font-size: 0.78em;
