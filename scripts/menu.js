@@ -1,9 +1,9 @@
 // Render del bloque "Menú del día" (landing) y para Modo TV.
 
-import { getMenuDelDia } from './api.js?v=20260502-unified-fit';
-import { CONFIG } from './config.js?v=20260502-unified-fit';
-import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-unified-fit';
-import { getCurrentLocation } from './location.js?v=20260502-unified-fit';
+import { getMenuDelDia } from './api.js?v=20260502-unified-wide';
+import { CONFIG } from './config.js?v=20260502-unified-wide';
+import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-unified-wide';
+import { getCurrentLocation } from './location.js?v=20260502-unified-wide';
 
 export async function renderMenu(container, { variant = 'landing' } = {}) {
   const loc = getCurrentLocation();

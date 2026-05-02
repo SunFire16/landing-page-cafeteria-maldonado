@@ -1,10 +1,10 @@
 // Entry point del Modo TV: muestra menú del día por sucursal con auto-refresh y exportables.
 
-import { CONFIG } from './config.js?v=20260502-unified-fit';
-import { readLocationFromUrl } from './location.js?v=20260502-unified-fit';
-import { renderAllMenus } from './menu.js?v=20260502-unified-fit';
-import { exportNodeToImage, exportNodeToPdf } from './export.js?v=20260502-unified-fit';
-import { track } from './analytics.js?v=20260502-unified-fit';
+import { CONFIG } from './config.js?v=20260502-unified-wide';
+import { readLocationFromUrl } from './location.js?v=20260502-unified-wide';
+import { renderAllMenus } from './menu.js?v=20260502-unified-wide';
+import { exportNodeToImage, exportNodeToPdf } from './export.js?v=20260502-unified-wide';
+import { track } from './analytics.js?v=20260502-unified-wide';
 
 readLocationFromUrl();
 

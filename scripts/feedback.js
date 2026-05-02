@@ -1,9 +1,9 @@
 // Encuesta privada de satisfacción. Validación cliente + envío al backend.
 
-import { sendFeedback } from './api.js?v=20260502-unified-fit';
-import { CONFIG } from './config.js?v=20260502-unified-fit';
-import { getCurrentLocation } from './location.js?v=20260502-unified-fit';
-import { track } from './analytics.js?v=20260502-unified-fit';
+import { sendFeedback } from './api.js?v=20260502-unified-wide';
+import { CONFIG } from './config.js?v=20260502-unified-wide';
+import { getCurrentLocation } from './location.js?v=20260502-unified-wide';
+import { track } from './analytics.js?v=20260502-unified-wide';
 
 const RATING_FIELDS = ['ratingGeneral', 'ratingSpeed', 'ratingAccuracy'];
 

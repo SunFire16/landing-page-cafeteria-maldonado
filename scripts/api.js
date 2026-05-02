@@ -1,7 +1,7 @@
 // Cliente HTTP para los endpoints públicos de la landing.
 // Implementa: timeout, parsing seguro, normalización de errores y caché en memoria.
 
-import { CONFIG } from './config.js?v=20260502-unified-fit';
+import { CONFIG } from './config.js?v=20260502-unified-wide';
 
 const memoryCache = new Map();
 
