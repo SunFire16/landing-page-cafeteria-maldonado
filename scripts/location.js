@@ -1,6 +1,6 @@
 // Manejo de la sucursal activa: persistencia, eventos y validación.
 
-import { CONFIG, getLocationById } from './config.js';
+import { CONFIG, getLocationById } from './config.js?v=20260502-ambos-locales';
 
 const STORAGE_KEY = CONFIG.ui.locationStorageKey;
 
