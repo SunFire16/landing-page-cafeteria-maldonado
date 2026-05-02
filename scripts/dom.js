@@ -1,6 +1,6 @@
 // Utilidades DOM mínimas y seguras (sin innerHTML para datos dinámicos).
 
-import { CONFIG } from './config.js?v=20260502-tv-dense8';
+import { CONFIG } from './config.js?v=20260502-tv-dense9';
 
 export function el(tag, props = {}, children = []) {
   const node = document.createElement(tag);
@@ -38,16 +38,16 @@ export function formatPrice(value) {
 }
 
 export function safeImage(url, alt) {
-  const img = el('img', {
-    src: proxiedImageUrl(url),
-    alt: alt || '',
-    loading: 'lazy',
-    decoding: 'async',
-    // crossorigin="anonymous" permite que html2canvas pueda usar la imagen en el
-    // canvas sin "taint". Requiere que el bucket de Firebase Storage tenga CORS
-    // configurado (ver CORS-SETUP.md).
-    crossorigin: 'anonymous',
-  });
+  // IMPORTANTE: el atributo crossorigin debe estar presente ANTES de asignar
+  // src, si no el navegador inicia el fetch sin CORS y luego marca la imagen
+  // como tainted/error al añadir crossorigin tarde. Por eso se crea el <img>
+  // a mano y no por `el(...)`, que asignaría src primero.
+  const img = document.createElement('img');
+  img.crossOrigin = 'anonymous';
+  img.decoding = 'async';
+  img.loading = 'lazy';
+  img.alt = alt || '';
+  img.src = proxiedImageUrl(url);
   img.addEventListener('error', () => {
     img.replaceWith(el('div', { class: 'img-fallback', 'aria-hidden': 'true' }, '☕'));
   });
