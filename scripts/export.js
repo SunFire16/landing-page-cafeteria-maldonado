@@ -2,7 +2,7 @@
 // Renderiza siempre a tamaño TV fijo (1920x1080) para que la salida
 // se vea limpia, sin recortes ni layout responsivo del viewport actual.
 
-import { fitVariantsToCards } from './menu.js?v=20260502-tv-dense7';
+import { fitVariantsToCards } from './menu.js?v=20260502-tv-dense8';
 
 const CDN = {
   html2canvas: 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js',
@@ -41,37 +41,28 @@ function nextFrame() {
   return new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 }
 
-// Proxy de imágenes con CORS habilitado (para sortear Firebase Storage sin CORS).
-function toProxiedUrl(url) {
-  if (!url || url.startsWith('data:') || url.startsWith('blob:')) return url;
-  try {
-    const u = new URL(url, location.href);
-    if (u.origin === location.origin) return url; // mismo origen, no hace falta proxy
-    // images.weserv.nl requiere url SIN protocolo, pero acepta query con params escapados.
-    const stripped = u.toString().replace(/^https?:\/\//, '');
-    return 'https://images.weserv.nl/?url=' + encodeURIComponent(stripped);
-  } catch {
-    return url;
-  }
-}
-
-function swapImageSources(node) {
-  const restores = [];
+// Asegura crossorigin="anonymous" en todas las imágenes del nodo. Las imágenes
+// se sirven desde Firebase Storage que ya tiene CORS habilitado para nuestros
+// orígenes (ver CORS-SETUP.md). Esto evita que html2canvas marque el canvas
+// como "tainted" y permite exportar PNG/PDF con las imágenes incluidas.
+async function ensureCrossOriginImages(node) {
+  const reloads = [];
   node.querySelectorAll('img').forEach((img) => {
-    const original = img.getAttribute('src');
-    if (!original) return;
-    const proxied = toProxiedUrl(original);
-    if (proxied === original) return;
-    restores.push({ img, original });
+    if (img.getAttribute('crossorigin') === 'anonymous') return;
+    const src = img.getAttribute('src');
+    if (!src) return;
     img.setAttribute('crossorigin', 'anonymous');
-    img.setAttribute('src', proxied);
+    // Forzar recarga con el nuevo atributo crossorigin
+    img.setAttribute('src', '');
+    img.setAttribute('src', src);
+    reloads.push(
+      new Promise((res) => {
+        img.addEventListener('load', res, { once: true });
+        img.addEventListener('error', res, { once: true });
+      })
+    );
   });
-  return () => {
-    restores.forEach(({ img, original }) => {
-      img.removeAttribute('crossorigin');
-      img.setAttribute('src', original);
-    });
-  };
+  if (reloads.length) await Promise.all(reloads);
 }
 
 // Aplica un "tamaño TV" temporal al nodo y dispara el re-fit antes de capturar.
@@ -90,8 +81,9 @@ async function withTvDimensions(node, fn) {
   node.style.position = 'relative';
   document.body.style.overflow = 'hidden';
 
-  // Cambiamos las imgs externas por proxy CORS para que html2canvas pueda leerlas
-  const restoreImgs = swapImageSources(node);
+  // Aseguramos crossorigin="anonymous" en todas las imágenes para que
+  // html2canvas pueda incluirlas en el canvas sin "tainting".
+  await ensureCrossOriginImages(node);
 
   const wrap = node.querySelector('.unified-menu-wrap');
   if (wrap) {
@@ -117,8 +109,7 @@ async function withTvDimensions(node, fn) {
 
   try {
     return await fn();
-  } finally {
-    restoreImgs();
+  } restoreImgs();
     node.setAttribute('style', prev.nodeStyle);
     document.body.style.overflow = prev.bodyOverflow;
     document.body.classList.remove('exporting');

@@ -1,6 +1,6 @@
 // Utilidades DOM mínimas y seguras (sin innerHTML para datos dinámicos).
 
-import { CONFIG } from './config.js?v=20260502-tv-dense7';
+import { CONFIG } from './config.js?v=20260502-tv-dense8';
 
 export function el(tag, props = {}, children = []) {
   const node = document.createElement(tag);
@@ -43,7 +43,10 @@ export function safeImage(url, alt) {
     alt: alt || '',
     loading: 'lazy',
     decoding: 'async',
-    referrerpolicy: 'no-referrer',
+    // crossorigin="anonymous" permite que html2canvas pueda usar la imagen en el
+    // canvas sin "taint". Requiere que el bucket de Firebase Storage tenga CORS
+    // configurado (ver CORS-SETUP.md).
+    crossorigin: 'anonymous',
   });
   img.addEventListener('error', () => {
     img.replaceWith(el('div', { class: 'img-fallback', 'aria-hidden': 'true' }, '☕'));
