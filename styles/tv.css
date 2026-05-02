@@ -111,26 +111,34 @@ body.tv {
 .tv-grid.unified-menu-wrap > .unified-menu { display: contents; }
 
 /* Layout por tamaño:
-   - card normal (≤4 variantes): span 6, fila chica
-   - card--lg (5-6 variantes): span 6, fila chica
-   - card--xl (≥7 variantes): span 12, fila grande con todas sus variantes visibles */
+   - card normal (≤4 variantes): grid-row 1, span dinámico según cantidad
+   - card--lg (5-6 variantes): grid-row 1
+   - card--xl (≥7 variantes): grid-column completa, grid-row 2 con todas sus variantes visibles */
 .unified-menu--tv .card--menu { grid-column: span 6; grid-row: 1; }
 .unified-menu--tv .card--menu.card--lg { grid-column: span 6; grid-row: 1; }
-.unified-menu--tv .card--menu.card--xl { grid-column: span 12; grid-row: 2; }
+.unified-menu--tv .card--menu.card--xl { grid-column: 1 / -1; grid-row: 2; }
 
-/* Si NO hay tarjeta XL, distribuye a 4 columnas las normales/lg en una sola fila */
-.unified-menu--tv:not(:has(.card--xl)) .card--menu { grid-column: span 4; }
-.unified-menu--tv:not(:has(.card--xl)) .card--menu.card--lg { grid-column: span 6; }
+/* Spans dinámicos según cuántas tarjetas compactas haya en la fila superior */
+.unified-menu-wrap--tv[data-compact-count="1"] .unified-menu--tv .card--menu { grid-column: span 12; }
+.unified-menu-wrap--tv[data-compact-count="2"] .unified-menu--tv .card--menu { grid-column: span 6; }
+.unified-menu-wrap--tv[data-compact-count="3"] .unified-menu--tv .card--menu { grid-column: span 4; }
+.unified-menu-wrap--tv[data-compact-count="4"] .unified-menu--tv .card--menu { grid-column: span 3; }
+.unified-menu-wrap--tv[data-compact-count="5"] .unified-menu--tv .card--menu,
+.unified-menu-wrap--tv[data-compact-count="6"] .unified-menu--tv .card--menu { grid-column: span 2; }
+
+/* Si NO hay XL, las compactas pueden tomar más alto y ocupar todas las filas disponibles */
+.unified-menu-wrap--tv[data-xl-count="0"] .unified-menu--tv .card--menu,
+.unified-menu-wrap--tv[data-xl-count="0"] .unified-menu--tv .card--menu.card--lg { grid-row: 1 / -1; }
 
 @media (max-width: 1100px) {
   .unified-menu--tv .card--menu,
-  .unified-menu--tv .card--menu.card--lg { grid-column: span 6; grid-row: auto; }
-  .unified-menu--tv .card--menu.card--xl { grid-column: span 12; grid-row: auto; }
+  .unified-menu--tv .card--menu.card--lg { grid-column: span 6 !important; grid-row: auto; }
+  .unified-menu--tv .card--menu.card--xl { grid-column: 1 / -1; grid-row: auto; }
 }
 @media (max-width: 720px) {
   .unified-menu--tv .card--menu,
   .unified-menu--tv .card--menu.card--lg,
-  .unified-menu--tv .card--menu.card--xl { grid-column: span 12; grid-row: auto; }
+  .unified-menu--tv .card--menu.card--xl { grid-column: 1 / -1 !important; grid-row: auto; }
 }
 
 /* ---------- Card ---------- */

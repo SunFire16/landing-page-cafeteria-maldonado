@@ -1,9 +1,9 @@
 // Render del bloque "Menú del día" (landing) y para Modo TV.
 
-import { getMenuDelDia } from './api.js?v=20260502-tv-allvar2';
-import { CONFIG } from './config.js?v=20260502-tv-allvar2';
-import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-tv-allvar2';
-import { getCurrentLocation } from './location.js?v=20260502-tv-allvar2';
+import { getMenuDelDia } from './api.js?v=20260502-tv-allvar3';
+import { CONFIG } from './config.js?v=20260502-tv-allvar3';
+import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-tv-allvar3';
+import { getCurrentLocation } from './location.js?v=20260502-tv-allvar3';
 
 export async function renderMenu(container, { variant = 'landing' } = {}) {
   const loc = getCurrentLocation();
@@ -52,6 +52,10 @@ export async function renderAllMenus(container, { variant = 'landing' } = {}) {
   if (products.length === 0) {
     fragment.append(renderInlineState('Aún no hay menú publicado.', 'Vuelve en unos minutos.'));
   } else {
+    const compactCount = products.filter((p) => (p.variants?.length || 0) < 7).length;
+    const xlCount = products.length - compactCount;
+    container.dataset.compactCount = String(compactCount);
+    container.dataset.xlCount = String(xlCount);
     fragment.append(el('div', { class: `unified-menu unified-menu--${variant}` }, products.map((item) => renderCard(item, variant))));
   }
   // Swap atómico: limpiamos justo antes de insertar para evitar el flash.
