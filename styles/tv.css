@@ -266,7 +266,7 @@ body.tv {
 .unified-menu--tv .variants {
   display: grid;
   gap: 4px 8px;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
   margin-top: 4px;
   padding-top: 6px;
   border-top: 1px solid rgba(107,63,29,0.18);
@@ -277,23 +277,24 @@ body.tv {
 }
 .unified-menu--tv .card--lg .variants,
 .unified-menu--tv .card--xl .variants {
-  grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
 }
 .unified-menu--tv .variant {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 4px;
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: stretch;
   font-size: 0.72rem;
-  padding: 3px 8px;
+  padding: 4px 8px;
   background: rgba(107,63,29,0.05);
   border-radius: 8px;
   min-width: 0;
 }
 .unified-menu--tv .variant__name {
   font-weight: 700; color: #3a2113;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  min-width: 0;
+  white-space: normal; overflow: visible; text-overflow: clip;
+  line-height: 1.15;
+  word-break: break-word;
 }
 .unified-menu--tv .variant__meta {
   display: inline-flex; align-items: center; gap: 5px;
