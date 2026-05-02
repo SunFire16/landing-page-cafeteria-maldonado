@@ -2,7 +2,7 @@
 // Renderiza siempre a tamaño TV fijo (1920x1080) para que la salida
 // se vea limpia, sin recortes ni layout responsivo del viewport actual.
 
-import { fitVariantsToCards } from './menu.js?v=20260502-tv-dense12';
+import { fitVariantsToCards } from './menu.js?v=20260502-tv-dense13';
 
 const CDN = {
   html2canvas: 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js',
@@ -138,6 +138,20 @@ async function snapshot(node) {
       scrollY: 0,
       x: 0,
       y: 0,
+      // html2canvas no respeta object-fit:cover en <img>. Antes de capturar,
+      // convertimos cada imagen de card a background-image en su contenedor
+      // para que aparezca recortada (cover) y no estirada.
+      onclone(_clonedDoc, _el) {
+        _clonedDoc.querySelectorAll('.card__media').forEach((media) => {
+          const img = media.querySelector('img');
+          if (!img || !img.src) return;
+          media.style.backgroundImage = `url('${img.src}')`;
+          media.style.backgroundSize = 'cover';
+          media.style.backgroundPosition = 'center';
+          media.style.backgroundRepeat = 'no-repeat';
+          img.remove();
+        });
+      },
     })
   );
 }

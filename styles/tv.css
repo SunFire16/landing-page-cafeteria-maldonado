@@ -295,7 +295,8 @@ body.tv {
   min-height: 0;
   overflow: visible;
   flex: 1 1 auto;
-  align-content: start;
+  align-content: stretch;
+  align-items: stretch;
 }
 .unified-menu--tv .card--lg .variants {
   grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
@@ -309,11 +310,13 @@ body.tv {
   flex-direction: column;
   gap: var(--variant-gap, 4px);
   align-items: stretch;
+  justify-content: center;
   font-size: calc(1.28rem * var(--variant-fs, 1));
   padding: var(--variant-pad, 8px 12px);
   background: rgba(107,63,29,0.05);
   border-radius: 12px;
   min-width: 0;
+  height: 100%;
 }
 .unified-menu--tv .card--lg .variant { font-size: calc(1.12rem * var(--variant-fs, 1)); padding: var(--variant-pad, 6px 10px); gap: var(--variant-gap, 3px); }
 .unified-menu--tv .card--xl .variant { font-size: calc(0.95rem * var(--variant-fs, 1)); padding: var(--variant-pad, 5px 9px); gap: var(--variant-gap, 2px); border-radius: 10px; }
@@ -431,6 +434,8 @@ body.tv {
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
+  align-content: stretch !important;
+  align-items: stretch !important;
 }
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .variant,
 .unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .variant {
