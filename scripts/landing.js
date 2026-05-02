@@ -8,6 +8,7 @@ import { bindFeedbackForm } from './feedback.js';
 import { track } from './analytics.js';
 
 readLocationFromUrl();
+let loadId = 0;
 
 function bindLocationSelector() {
   const select = document.querySelector('[data-location-select]');
@@ -21,8 +22,9 @@ function bindLocationSelector() {
   }
   select.value = getCurrentLocation().id;
   select.addEventListener('change', (e) => {
-    setCurrentLocation(e.target.value);
-    track('location_change', { newLocation: e.target.value });
+    const loc = setCurrentLocation(e.target.value);
+    syncLocationUrl(loc.id);
+    track('location_change', { newLocation: loc.id });
   });
 }
 
@@ -46,12 +48,22 @@ function bindTvLink() {
 }
 
 async function loadDynamic() {
+  const currentLoad = ++loadId;
   const menuRoot = document.querySelector('[data-menu]');
   const bestRoot = document.querySelector('[data-bestsellers]');
+  if (menuRoot) menuRoot.dataset.loadingFor = getCurrentLocation().id;
+  if (bestRoot) bestRoot.dataset.loadingFor = getCurrentLocation().id;
   await Promise.all([
     menuRoot ? renderMenu(menuRoot, { variant: 'landing' }) : null,
     bestRoot ? renderBestSellers(bestRoot, { scope: 'location', limit: 6 }) : null,
   ]);
+  if (currentLoad !== loadId) return;
+}
+
+function syncLocationUrl(locationId) {
+  const url = new URL(window.location.href);
+  url.searchParams.set('local', locationId);
+  window.history.replaceState({}, '', url);
 }
 
 function setupYear() {

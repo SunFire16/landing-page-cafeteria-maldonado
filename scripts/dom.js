@@ -28,9 +28,9 @@ export function clear(node) {
 export function formatPrice(value) {
   const num = Number(value);
   if (!Number.isFinite(num)) return '—';
-  return new Intl.NumberFormat('es-HN', {
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'HNL',
+    currency: 'USD',
     maximumFractionDigits: 2,
   }).format(num);
 }
@@ -42,7 +42,6 @@ export function safeImage(url, alt) {
     loading: 'lazy',
     decoding: 'async',
     referrerpolicy: 'no-referrer',
-    crossOrigin: 'anonymous',
   });
   img.addEventListener('error', () => {
     img.replaceWith(el('div', { class: 'img-fallback', 'aria-hidden': 'true' }, '☕'));

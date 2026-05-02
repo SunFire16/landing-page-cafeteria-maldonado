@@ -77,14 +77,14 @@ export class ApiError extends Error {
 
 export function getMenuDelDia(locationId) {
   return request('/landingMenuDelDia', {
-    params: { locationId },
+    params: { locationId, v: Math.floor(Date.now() / 30_000) },
     cacheKey: `menu:${locationId}`,
   });
 }
 
 export function getBestSellers({ scope = 'global', locationId, limit = 6 } = {}) {
   return request('/landingBestSellers', {
-    params: { scope, locationId, limit },
+    params: { scope, locationId, limit, v: Math.floor(Date.now() / 60_000) },
     cacheKey: `best:${scope}:${locationId ?? '-'}:${limit}`,
   });
 }

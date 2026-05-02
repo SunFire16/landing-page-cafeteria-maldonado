@@ -44,6 +44,7 @@ function renderList(container, items) {
 }
 
 function renderCard(item, rank) {
+  const price = Number(item.price);
   return el('article', { class: 'card card--best' }, [
     el('div', { class: 'card__media' }, [
       el('span', { class: 'rank-badge', 'aria-label': `Top ${rank}` }, `#${rank}`),
@@ -52,7 +53,7 @@ function renderCard(item, rank) {
     el('div', { class: 'card__body' }, [
       el('h3', { class: 'card__title' }, item.name),
       el('div', { class: 'card__row' }, [
-        el('span', { class: 'card__price' }, formatPrice(item.price)),
+        el('span', { class: 'card__price' }, Number.isFinite(price) && price > 0 ? formatPrice(price) : 'Ver opciones'),
         item.category ? el('span', { class: 'tag' }, item.category) : null,
       ]),
     ]),

@@ -45,6 +45,8 @@ function renderList(container, items, variant) {
 
 function renderCard(item, variant) {
   const availability = getAvailability(item);
+  const variants = getVariants(item);
+  const priceLabel = getPriceLabel(item, variants);
   return el('article', { class: `card card--menu card--${variant} ${availability.isOut ? 'card--unavailable' : ''}` }, [
     el('div', { class: 'card__media' }, [
       safeImage(item.imageUrl, item.name),
@@ -53,12 +55,48 @@ function renderCard(item, variant) {
     el('div', { class: 'card__body' }, [
       el('h3', { class: 'card__title' }, item.name),
       item.description ? el('p', { class: 'card__desc' }, item.description) : null,
+      variants.length ? renderVariants(variants) : null,
       el('div', { class: 'card__row' }, [
-        el('span', { class: 'card__price' }, formatPrice(item.price)),
+        el('span', { class: 'card__price' }, priceLabel),
         item.category ? el('span', { class: 'tag' }, item.category) : null,
       ]),
     ]),
   ]);
+}
+
+function getVariants(item) {
+  const raw = item.variants || item.productVariants || item.options || item.presentations || item.sizes || [];
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((variant, index) => ({
+      id: variant.id || variant.variantId || String(index),
+      name: variant.name || variant.label || variant.size || variant.presentation || `Opción ${index + 1}`,
+      price: Number(variant.price ?? variant.finalPrice ?? variant.salePrice),
+      inventoryLocal: variant.inventoryLocal ?? variant.stock ?? variant.quantity,
+    }))
+    .filter((variant) => Number.isFinite(variant.price));
+}
+
+function getPriceLabel(item, variants) {
+  const basePrice = Number(item.price);
+  if (Number.isFinite(basePrice) && basePrice > 0) return formatPrice(basePrice);
+  const variantPrices = variants.map((variant) => variant.price).filter((price) => Number.isFinite(price) && price > 0);
+  if (variantPrices.length) return `Desde ${formatPrice(Math.min(...variantPrices))}`;
+  return 'Ver opciones';
+}
+
+function renderVariants(variants) {
+  return el('div', { class: 'variants' }, variants.slice(0, 5).map((variant) => {
+    const stock = Number(variant.inventoryLocal);
+    const stockLabel = Number.isFinite(stock) && stock <= 0 ? 'Agotado' : null;
+    return el('div', { class: `variant ${stockLabel ? 'variant--out' : ''}` }, [
+      el('span', { class: 'variant__name' }, variant.name),
+      el('span', { class: 'variant__meta' }, [
+        formatPrice(variant.price),
+        stockLabel ? ` · ${stockLabel}` : '',
+      ]),
+    ]);
+  }));
 }
 
 function getAvailability(item) {
