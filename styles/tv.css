@@ -339,54 +339,73 @@ body.tv {
 }
 
 /* ---------- Modo DENSO: muchos productos, sin imágenes, todo en texto grande ---------- */
-.unified-menu-wrap--tv[data-density="dense"] .card__media { display: none !important; }
+.unified-menu-wrap--tv[data-density="dense"] {
+  display: grid !important;
+  grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+  grid-template-rows: none !important;
+  grid-auto-rows: minmax(0, 1fr) !important;
+  align-content: stretch !important;
+}
+.unified-menu-wrap--tv[data-density="dense"] .card__media,
+.unified-menu-wrap--tv[data-density="dense"] .stock-badge { display: none !important; }
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu,
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu.card--lg,
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu.card--xl {
   grid-template-rows: none !important;
   grid-template-columns: 1fr !important;
   grid-row: auto !important;
-}
-.unified-menu-wrap--tv[data-density="dense"] .tv-grid.unified-menu-wrap,
-.unified-menu-wrap--tv[data-density="dense"] {
-  grid-template-rows: 1fr !important;
+  height: 100%;
+  min-height: 0;
 }
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu .card__body {
-  padding: 18px 22px;
-  gap: 10px;
+  padding: 14px 18px;
+  gap: 8px;
   height: 100%;
+  min-height: 0;
+  overflow: hidden;
 }
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card__title {
-  font-size: clamp(1.6rem, 1.9vw, 2.4rem) !important;
+  font-size: clamp(1.4rem, 1.7vw, 2.2rem) !important;
+  margin: 0;
 }
+/* Cuando hay variantes, ocultar la fila inferior de precio "Desde" (las variantes ya lo muestran) */
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu:has(.variants) .card__row { display: none !important; }
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card__price {
-  font-size: clamp(1.5rem, 1.6vw, 2rem) !important;
+  font-size: clamp(1.4rem, 1.5vw, 1.9rem) !important;
 }
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .location-status {
   font-size: 1rem !important;
-  padding: 5px 12px !important;
+  padding: 4px 11px !important;
 }
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .variants {
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
-  gap: 6px 10px !important;
-  padding-top: 10px !important;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+  gap: 6px 8px !important;
+  padding-top: 8px !important;
+  margin-top: 4px !important;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .variant {
-  font-size: 1.05rem !important;
-  padding: 7px 11px !important;
-  gap: 3px !important;
+  font-size: 1rem !important;
+  padding: 6px 10px !important;
+  gap: 2px !important;
+  border-radius: 10px;
 }
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card__desc { display: none; }
-.unified-menu-wrap--tv[data-density="dense"] .stock-badge { display: none; }
 
-/* Spans para modo denso por cantidad de productos */
+/* Distribución de spans según cantidad de productos */
+.unified-menu-wrap--tv[data-density="dense"][data-products="3"] .unified-menu--tv .card--menu { grid-column: span 4 !important; }
 .unified-menu-wrap--tv[data-density="dense"][data-products="4"] .unified-menu--tv .card--menu { grid-column: span 6 !important; }
 .unified-menu-wrap--tv[data-density="dense"][data-products="5"] .unified-menu--tv .card--menu,
 .unified-menu-wrap--tv[data-density="dense"][data-products="6"] .unified-menu--tv .card--menu { grid-column: span 4 !important; }
 .unified-menu-wrap--tv[data-density="dense"][data-products="7"] .unified-menu--tv .card--menu,
 .unified-menu-wrap--tv[data-density="dense"][data-products="8"] .unified-menu--tv .card--menu { grid-column: span 3 !important; }
-.unified-menu-wrap--tv[data-density="dense"][data-products="3"] .unified-menu--tv .card--menu { grid-column: span 4 !important; }
-/* Cuando hay XL en modo denso, ese producto siempre toma fila completa para mostrar todas sus variantes */
+.unified-menu-wrap--tv[data-density="dense"][data-products="9"] .unified-menu--tv .card--menu,
+.unified-menu-wrap--tv[data-density="dense"][data-products="10"] .unified-menu--tv .card--menu,
+.unified-menu-wrap--tv[data-density="dense"][data-products="11"] .unified-menu--tv .card--menu,
+.unified-menu-wrap--tv[data-density="dense"][data-products="12"] .unified-menu--tv .card--menu { grid-column: span 3 !important; }
+/* XL siempre fila completa para mostrar todas sus variantes en horizontal */
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu.card--xl { grid-column: 1 / -1 !important; }
 
 .unified-menu--tv .variant-locations { gap: 5px; }
