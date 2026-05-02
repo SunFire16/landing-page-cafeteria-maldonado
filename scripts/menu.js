@@ -1,9 +1,9 @@
 // Render del bloque "Menú del día" (landing) y para Modo TV.
 
-import { getMenuDelDia } from './api.js?v=20260502-tv-dense5';
-import { CONFIG } from './config.js?v=20260502-tv-dense5';
-import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-tv-dense5';
-import { getCurrentLocation } from './location.js?v=20260502-tv-dense5';
+import { getMenuDelDia } from './api.js?v=20260502-tv-dense6';
+import { CONFIG } from './config.js?v=20260502-tv-dense6';
+import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-tv-dense6';
+import { getCurrentLocation } from './location.js?v=20260502-tv-dense6';
 
 export async function renderMenu(container, { variant = 'landing' } = {}) {
   const loc = getCurrentLocation();
@@ -135,7 +135,7 @@ export async function renderAllMenus(container, { variant = 'landing' } = {}) {
   return results;
 }
 
-function fitVariantsToCards(container) {
+export function fitVariantsToCards(container) {
   const cards = container.querySelectorAll('.card--menu');
   cards.forEach((card) => {
     const variantsBox = card.querySelector('.variants');
