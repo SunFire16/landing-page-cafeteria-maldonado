@@ -338,6 +338,31 @@ body.tv {
   text-decoration: line-through;
 }
 
+/* Modo ULTRA-compacto: cuando ni el shrink alcanza, una sola línea por variante,
+   horizontal en chips, ocultando ubicaciones. Se aplica por JS como último recurso. */
+.unified-menu--tv .variants.variants--ultra {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 4px 6px !important;
+  align-content: start;
+}
+.unified-menu--tv .variants.variants--ultra .variant {
+  flex: 0 0 auto !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 2px 7px !important;
+  font-size: calc(0.85rem * var(--variant-fs, 0.7)) !important;
+  border-radius: 999px !important;
+  white-space: nowrap;
+}
+.unified-menu--tv .variants.variants--ultra .variant__name {
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 16ch;
+}
+.unified-menu--tv .variants.variants--ultra .variant-locations { display: none !important; }
+.unified-menu--tv .variants.variants--ultra .variant__meta { font-size: 0.95em; }
+
 /* ---------- Modo DENSO (común a 'dense' y 'dense-image') ---------- */
 .unified-menu-wrap--tv[data-density="dense"],
 .unified-menu-wrap--tv[data-density="dense-image"] {

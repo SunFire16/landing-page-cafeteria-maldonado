@@ -1,9 +1,9 @@
 // Render del bloque "Menú del día" (landing) y para Modo TV.
 
-import { getMenuDelDia } from './api.js?v=20260502-tv-dense3';
-import { CONFIG } from './config.js?v=20260502-tv-dense3';
-import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-tv-dense3';
-import { getCurrentLocation } from './location.js?v=20260502-tv-dense3';
+import { getMenuDelDia } from './api.js?v=20260502-tv-dense4';
+import { CONFIG } from './config.js?v=20260502-tv-dense4';
+import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-tv-dense4';
+import { getCurrentLocation } from './location.js?v=20260502-tv-dense4';
 
 export async function renderMenu(container, { variant = 'landing' } = {}) {
   const loc = getCurrentLocation();
@@ -123,6 +123,12 @@ function fitVariantsToCards(container) {
       card.style.setProperty('--variant-fs', String(s.fs));
       if (s.pad) card.style.setProperty('--variant-pad', s.pad);
       if (s.gap) card.style.setProperty('--variant-gap', s.gap);
+    }
+    // Último recurso: si aún no caben, comprimir a "ultra" (chips inline 1-línea)
+    if (variantsBox.scrollHeight - variantsBox.clientHeight > 2) {
+      variantsBox.classList.add('variants--ultra');
+    } else {
+      variantsBox.classList.remove('variants--ultra');
     }
   });
 }
