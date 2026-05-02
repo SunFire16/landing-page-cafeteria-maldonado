@@ -1,9 +1,9 @@
 // Render del bloque "Menú del día" (landing) y para Modo TV.
 
-import { getMenuDelDia } from './api.js?v=20260502-tv-fit2';
-import { CONFIG } from './config.js?v=20260502-tv-fit2';
-import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-tv-fit2';
-import { getCurrentLocation } from './location.js?v=20260502-tv-fit2';
+import { getMenuDelDia } from './api.js?v=20260502-tv-text';
+import { CONFIG } from './config.js?v=20260502-tv-text';
+import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-tv-text';
+import { getCurrentLocation } from './location.js?v=20260502-tv-text';
 
 export async function renderMenu(container, { variant = 'landing' } = {}) {
   const loc = getCurrentLocation();
@@ -26,7 +26,10 @@ export async function renderMenu(container, { variant = 'landing' } = {}) {
 }
 
 export async function renderAllMenus(container, { variant = 'landing' } = {}) {
-  setAllSkeleton(container, variant);
+  // Solo mostrar skeleton en la carga inicial (container vacío) para evitar
+  // el "parpadeo" en cada refresco automático.
+  const isInitial = !container.querySelector('.unified-menu, .location-menu');
+  if (isInitial) setAllSkeleton(container, variant);
 
   const results = await Promise.all(CONFIG.locations.map(async (loc) => {
     try {
@@ -41,16 +44,19 @@ export async function renderAllMenus(container, { variant = 'landing' } = {}) {
     }
   }));
 
-  clear(container);
   container.classList.remove('grid-menu', 'grid-menu--landing', 'grid-menu--tv');
   container.classList.add('unified-menu-wrap', `unified-menu-wrap--${variant}`);
 
   const products = mergeMenuResults(results);
+  const fragment = document.createDocumentFragment();
   if (products.length === 0) {
-    container.append(renderInlineState('Aún no hay menú publicado.', 'Vuelve en unos minutos.'));
+    fragment.append(renderInlineState('Aún no hay menú publicado.', 'Vuelve en unos minutos.'));
   } else {
-    container.append(el('div', { class: `unified-menu unified-menu--${variant}` }, products.map((item) => renderCard(item, variant))));
+    fragment.append(el('div', { class: `unified-menu unified-menu--${variant}` }, products.map((item) => renderCard(item, variant))));
   }
+  // Swap atómico: limpiamos justo antes de insertar para evitar el flash.
+  clear(container);
+  container.append(fragment);
 
   return results;
 }

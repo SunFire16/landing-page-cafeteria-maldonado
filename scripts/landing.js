@@ -1,11 +1,11 @@
 // Entry point de la landing principal.
 
-import { CONFIG } from './config.js?v=20260502-tv-fit2';
-import { getCurrentLocation, setCurrentLocation, onLocationChange, readLocationFromUrl } from './location.js?v=20260502-tv-fit2';
-import { renderAllMenus } from './menu.js?v=20260502-tv-fit2';
-import { renderBestSellers } from './bestsellers.js?v=20260502-tv-fit2';
-import { bindFeedbackForm } from './feedback.js?v=20260502-tv-fit2';
-import { track } from './analytics.js?v=20260502-tv-fit2';
+import { CONFIG } from './config.js?v=20260502-tv-text';
+import { getCurrentLocation, setCurrentLocation, onLocationChange, readLocationFromUrl } from './location.js?v=20260502-tv-text';
+import { renderAllMenus } from './menu.js?v=20260502-tv-text';
+import { renderBestSellers } from './bestsellers.js?v=20260502-tv-text';
+import { bindFeedbackForm } from './feedback.js?v=20260502-tv-text';
+import { track } from './analytics.js?v=20260502-tv-text';
 
 readLocationFromUrl();
 let loadId = 0;
