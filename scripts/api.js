@@ -1,7 +1,7 @@
 // Cliente HTTP para los endpoints públicos de la landing.
 // Implementa: timeout, parsing seguro, normalización de errores y caché en memoria.
 
-import { CONFIG } from './config.js?v=20260502-tv-redesign';
+import { CONFIG } from './config.js?v=20260502-tv-fit';
 
 const memoryCache = new Map();
 

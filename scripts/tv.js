@@ -1,10 +1,10 @@
 // Entry point del Modo TV: muestra menú del día por sucursal con auto-refresh y exportables.
 
-import { CONFIG } from './config.js?v=20260502-tv-redesign';
-import { readLocationFromUrl } from './location.js?v=20260502-tv-redesign';
-import { renderAllMenus } from './menu.js?v=20260502-tv-redesign';
-import { exportNodeToImage, exportNodeToPdf } from './export.js?v=20260502-tv-redesign';
-import { track } from './analytics.js?v=20260502-tv-redesign';
+import { CONFIG } from './config.js?v=20260502-tv-fit';
+import { readLocationFromUrl } from './location.js?v=20260502-tv-fit';
+import { renderAllMenus } from './menu.js?v=20260502-tv-fit';
+import { exportNodeToImage, exportNodeToPdf } from './export.js?v=20260502-tv-fit';
+import { track } from './analytics.js?v=20260502-tv-fit';
 
 readLocationFromUrl();
 
