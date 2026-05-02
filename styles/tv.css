@@ -50,7 +50,7 @@ body.tv {
 }
 .unified-menu--tv .card--menu {
   display: grid;
-  grid-template-columns: 92px 1fr;
+  grid-template-columns: 72px 1fr;
   min-height: 0;
 }
 .unified-menu--tv .card__media {
@@ -58,17 +58,24 @@ body.tv {
   height: auto;
   aspect-ratio: auto;
 }
-.unified-menu--tv .card__body { padding: 12px; gap: 6px; }
+.unified-menu--tv .card__body { padding: 9px; gap: 4px; }
+.unified-menu--tv .card__title { font-size: 1rem; line-height: 1.1; }
+.unified-menu--tv .card__desc { display: none; }
+.unified-menu--tv .card__price { font-size: 0.95rem; }
+.unified-menu--tv .tag { font-size: 0.62rem; padding: 2px 6px; }
 .unified-menu--tv .variants {
-  gap: 3px;
-  margin-top: 2px;
-  padding-top: 6px;
-  grid-template-columns: 1fr;
+  gap: 2px 8px;
+  margin-top: 1px;
+  padding-top: 4px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
-.unified-menu--tv .variant { font-size: 0.72rem; gap: 6px; }
-.unified-menu--tv .variant__meta { gap: 4px; }
-.unified-menu--tv .location-status { font-size: 0.68rem; padding: 2px 6px; }
-.unified-menu--tv .variant-location { font-size: 0.62rem; padding: 1px 4px; }
+.unified-menu--tv .variant { display: block; font-size: 0.58rem; line-height: 1.12; min-width: 0; }
+.unified-menu--tv .variant__name { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.unified-menu--tv .variant__meta { display: flex; justify-content: space-between; gap: 3px; font-size: 0.56rem; }
+.unified-menu--tv .variant__price { min-width: auto; }
+.unified-menu--tv .location-status { font-size: 0.62rem; padding: 2px 5px; }
+.unified-menu--tv .variant-locations { gap: 2px; }
+.unified-menu--tv .variant-location { font-size: 0.5rem; padding: 0 3px; }
 .unified-menu--tv .stock-badge { font-size: 0.68rem; padding: 4px 6px; left: 6px; right: auto; top: 6px; }
 
 .location-menus--tv {
