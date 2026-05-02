@@ -5,7 +5,7 @@ Landing estática orientada a conversión hacia la app (Web/iPhone, Android) y a
 ## Stack
 
 - HTML + CSS + JavaScript modular (ES Modules), sin build step.
-- Despliegue gratuito en **Netlify** (`netlify.toml` incluido).
+- Despliegue en **GitHub Pages** con **GitHub Actions** (sin créditos por deploy).
 - Tipografías: Inter + Playfair Display (Google Fonts).
 - Exportación TV: `html2canvas` y `jsPDF` cargados perezosamente desde CDN.
 
@@ -13,10 +13,13 @@ Landing estática orientada a conversión hacia la app (Web/iPhone, Android) y a
 
 ```
 .
+├── .github/
+│   └── workflows/
+│       └── deploy-pages.yml  # Publicación automática en GitHub Pages
 ├── index.html              # Landing principal
 ├── tv.html                 # Modo TV (menú del día por sucursal)
 ├── 404.html
-├── netlify.toml            # Headers, cache y redirects
+├── netlify.toml            # Config opcional legacy para Netlify
 ├── robots.txt
 ├── assets/                 # Logo, favicon
 ├── styles/
@@ -39,7 +42,7 @@ Landing estática orientada a conversión hacia la app (Web/iPhone, Android) y a
 
 ## Endpoints consumidos (backend externo)
 
-El navegador consume rutas same-origin bajo `/api/*`; Netlify las reescribe a la función proxy `netlify/functions/api.js`, y esa función llama al backend real. Esto evita bloqueos CORS en producción.
+El frontend consume la API **directamente** contra Cloud Functions (sin proxy de Netlify). Esto permite publicar en GitHub Pages sin backend intermedio.
 
 Base real del backend: `https://us-central1-app-cafeteria-maldonado.cloudfunctions.net`
 
@@ -61,24 +64,20 @@ python -m http.server 5173
 
 Abrir `http://localhost:5173`.
 
-> Si la API está restringida por CORS al dominio Netlify, pide al backend habilitar también `http://localhost:5173` (o el puerto que uses) durante desarrollo.
+> Si la API está restringida por CORS, pide al backend habilitar también `http://localhost:5173`, `https://sunfire16.github.io` y tu dominio final de producción.
 
-## Despliegue en Netlify
+## Despliegue en GitHub Pages
 
-1. Subir el repo a GitHub.
-2. En Netlify: *Add new site → Import from Git*.
-3. Configuración:
-   - Build command: *(vacío)*
-   - Publish directory: `.`
-4. Netlify aplicará automáticamente lo definido en [netlify.toml](netlify.toml).
+1. Sube este repo a GitHub (rama `main`).
+2. En GitHub, abre: `Settings` → `Pages`.
+3. En `Source`, selecciona `GitHub Actions`.
+4. El workflow [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml) publicará automáticamente en cada push a `main`.
 
-### Redirects útiles
+Notas:
 
-- `/app` → app web
-- `/android` → Play Store
-- `/whatsapp` → grupo de WhatsApp
-
-Útiles para imprimir QRs cortos hacia la URL canónica.
+- GitHub Pages no cobra por cantidad de deploys como créditos mensuales de Netlify.
+- Sí existen límites generales de GitHub Actions/Pages (almacenamiento, minutos y ancho de banda razonable).
+- Si tu API valida CORS, autoriza al menos: `https://sunfire16.github.io` y tu dominio propio (si luego lo conectas).
 
 ## QR y campañas
 

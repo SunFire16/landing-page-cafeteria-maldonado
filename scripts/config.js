@@ -3,7 +3,8 @@
 
 export const CONFIG = Object.freeze({
   api: {
-    baseUrl: '/api',
+    baseUrl: 'https://us-central1-app-cafeteria-maldonado.cloudfunctions.net',
+    imageProxyPath: '',
     timeoutMs: 8000,
     cacheTtlMs: 0,
   },

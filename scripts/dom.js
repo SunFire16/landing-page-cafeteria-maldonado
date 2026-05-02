@@ -1,5 +1,7 @@
 // Utilidades DOM mínimas y seguras (sin innerHTML para datos dinámicos).
 
+import { CONFIG } from './config.js?v=20260502-tv-allvar3';
+
 export function el(tag, props = {}, children = []) {
   const node = document.createElement(tag);
   for (const [key, value] of Object.entries(props)) {
@@ -51,10 +53,13 @@ export function safeImage(url, alt) {
 
 function proxiedImageUrl(url) {
   if (!url) return '';
+  const proxyPath = CONFIG.api.imageProxyPath?.trim();
+  if (!proxyPath) return url;
   try {
     const parsed = new URL(url);
     if (parsed.hostname === 'firebasestorage.googleapis.com') {
-      return `/api/image?url=${encodeURIComponent(url)}`;
+      const joiner = proxyPath.includes('?') ? '&' : '?';
+      return `${proxyPath}${joiner}url=${encodeURIComponent(url)}`;
     }
   } catch {
     return url;
