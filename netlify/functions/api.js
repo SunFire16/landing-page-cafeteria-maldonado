@@ -45,7 +45,9 @@ exports.handler = async (event) => {
     });
 
     const text = await upstream.text();
-    const cache = method === 'GET' ? 'public, max-age=60, s-maxage=300' : 'no-store';
+    const cache = method === 'GET' && endpoint === 'landingBestSellers'
+      ? 'public, max-age=30, s-maxage=60'
+      : 'no-store';
     const contentType = upstream.headers.get('content-type') || '';
 
     if (!contentType.includes('application/json')) {

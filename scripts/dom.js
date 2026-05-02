@@ -28,9 +28,9 @@ export function clear(node) {
 export function formatPrice(value) {
   const num = Number(value);
   if (!Number.isFinite(num)) return '—';
-  return new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat('es-HN', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'HNL',
     maximumFractionDigits: 2,
   }).format(num);
 }

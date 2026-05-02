@@ -16,7 +16,7 @@ body.tv {
 .tv-header__loc strong { font-family: var(--font-display); color: #fff; }
 .tv-header__time { font-variant-numeric: tabular-nums; font-size: 1.4rem; color: rgba(255,255,255,0.85); }
 
-.tv-main { padding: 24px 172px 28px 40px; overflow: auto; color: var(--color-ink); }
+.tv-main { padding: 18px 156px 18px 32px; overflow: auto; color: var(--color-ink); }
 .tv-eyebrow { color: var(--color-gold); font-size: 1rem; letter-spacing: 0.18em; text-transform: uppercase; }
 .tv-title { font-size: clamp(2.4rem, 4vw, 3.6rem); margin-top: 4px; }
 .tv-grid { margin-top: 24px; display: grid; gap: 14px; grid-template-columns: 1fr; }
@@ -33,9 +33,9 @@ body.tv {
   grid-template-columns: minmax(140px, 36%) 1fr;
   min-height: 168px;
 }
-.tv-grid .card__title { color: var(--color-coffee-dark); font-size: 1.5rem; }
-.tv-grid .card__desc { color: var(--color-ink-soft); font-size: 1.05rem; }
-.tv-grid .card__price { color: var(--color-coffee); font-size: 1.4rem; }
+.tv-grid .card__title { color: var(--color-coffee-dark); font-size: 1.35rem; }
+.tv-grid .card__desc { color: var(--color-ink-soft); font-size: 0.95rem; }
+.tv-grid .card__price { color: var(--color-coffee); font-size: 1.22rem; }
 .tv-grid .card__media { aspect-ratio: auto; min-height: 168px; height: 100%; }
 .tv-grid .card__body { min-width: 0; }
 .tv-grid .tag { background: var(--color-surface-2); color: var(--color-coffee-dark); }
@@ -43,6 +43,33 @@ body.tv {
 .tv-grid .card--unavailable { opacity: 0.82; }
 .tv-grid .variant__name { color: var(--color-ink-soft); }
 .tv-grid .variant__meta { color: var(--color-coffee-dark); }
+
+.unified-menu--tv {
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+  gap: 14px;
+}
+.unified-menu--tv .card--menu {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  min-height: 0;
+}
+.unified-menu--tv .card__media {
+  min-height: 0;
+  height: auto;
+  aspect-ratio: auto;
+}
+.unified-menu--tv .card__body { padding: 12px; gap: 6px; }
+.unified-menu--tv .variants {
+  gap: 3px;
+  margin-top: 2px;
+  padding-top: 6px;
+  grid-template-columns: 1fr;
+}
+.unified-menu--tv .variant { font-size: 0.72rem; gap: 6px; }
+.unified-menu--tv .variant__meta { gap: 4px; }
+.unified-menu--tv .location-status { font-size: 0.68rem; padding: 2px 6px; }
+.unified-menu--tv .variant-location { font-size: 0.62rem; padding: 1px 4px; }
+.unified-menu--tv .stock-badge { font-size: 0.68rem; padding: 4px 6px; left: 6px; right: auto; top: 6px; }
 
 .location-menus--tv {
   grid-template-columns: repeat(2, minmax(0, 1fr));

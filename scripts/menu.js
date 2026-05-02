@@ -1,9 +1,9 @@
 // Render del bloque "Menú del día" (landing) y para Modo TV.
 
-import { getMenuDelDia } from './api.js?v=20260502-ambos-locales';
-import { CONFIG } from './config.js?v=20260502-ambos-locales';
-import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-ambos-locales';
-import { getCurrentLocation } from './location.js?v=20260502-ambos-locales';
+import { getMenuDelDia } from './api.js?v=20260502-unified-stock';
+import { CONFIG } from './config.js?v=20260502-unified-stock';
+import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-unified-stock';
+import { getCurrentLocation } from './location.js?v=20260502-unified-stock';
 
 export async function renderMenu(container, { variant = 'landing' } = {}) {
   const loc = getCurrentLocation();
@@ -43,12 +43,99 @@ export async function renderAllMenus(container, { variant = 'landing' } = {}) {
 
   clear(container);
   container.classList.remove('grid-menu', 'grid-menu--landing', 'grid-menu--tv');
-  container.classList.add('location-menus', `location-menus--${variant}`);
-  for (const result of results) {
-    container.append(renderLocationMenu(result, variant));
+  container.classList.add('unified-menu-wrap', `unified-menu-wrap--${variant}`);
+
+  const products = mergeMenuResults(results);
+  if (products.length === 0) {
+    container.append(renderInlineState('Aún no hay menú publicado.', 'Vuelve en unos minutos.'));
+  } else {
+    container.append(el('div', { class: `unified-menu unified-menu--${variant}` }, products.map((item) => renderCard(item, variant))));
   }
 
   return results;
+}
+
+function mergeMenuResults(results) {
+  const byProduct = new Map();
+
+  for (const result of results) {
+    if (result.error) continue;
+    const location = result.loc;
+    for (const item of result.items || []) {
+      const key = item.id || item.name;
+      if (!byProduct.has(key)) {
+        byProduct.set(key, {
+          ...item,
+          locations: [],
+          variants: [],
+          _variantMap: new Map(),
+        });
+      }
+
+      const product = byProduct.get(key);
+      const availability = getLocationAvailability(item);
+      product.locations.push({
+        id: location.id,
+        label: location.shortName,
+        name: result.meta?.locationName || location.name,
+        available: availability.available,
+        stock: availability.stock,
+      });
+
+      for (const variant of getVariants(item)) {
+        const variantKey = variant.id || variant.name;
+        if (!product._variantMap.has(variantKey)) {
+          product._variantMap.set(variantKey, {
+            ...variant,
+            locations: [],
+          });
+        }
+        const mergedVariant = product._variantMap.get(variantKey);
+        const stock = Number(variant.inventoryLocal);
+        mergedVariant.locations.push({
+          id: location.id,
+          label: location.shortName,
+          available: !Number.isFinite(stock) || stock > 0,
+          stock: Number.isFinite(stock) ? stock : null,
+        });
+      }
+    }
+  }
+
+  return Array.from(byProduct.values()).map((product) => {
+    product.locations = completeLocationStatuses(product.locations);
+    product.variants = Array.from(product._variantMap.values()).map((variant) => ({
+      ...variant,
+      locations: completeLocationStatuses(variant.locations),
+    }));
+    delete product._variantMap;
+    return product;
+  });
+}
+
+function completeLocationStatuses(statuses = []) {
+  return CONFIG.locations.map((location) => {
+    const found = statuses.find((status) => status.id === location.id);
+    return found || {
+      id: location.id,
+      label: location.shortName,
+      name: location.name,
+      available: false,
+      stock: 0,
+    };
+  });
+}
+
+function getLocationAvailability(item) {
+  const variants = getVariants(item);
+  if (variants.length) {
+    const stocks = variants.map((variant) => Number(variant.inventoryLocal)).filter(Number.isFinite);
+    if (!stocks.length) return { available: true, stock: null };
+    return { available: stocks.some((stock) => stock > 0), stock: stocks.reduce((sum, stock) => sum + Math.max(stock, 0), 0) };
+  }
+  const stock = Number(item.inventoryLocal);
+  if (!Number.isFinite(stock)) return { available: true, stock: null };
+  return { available: stock > 0, stock };
 }
 
 function setAllSkeleton(container, variant) {
@@ -123,6 +210,7 @@ function renderCard(item, variant) {
     ]),
     el('div', { class: 'card__body' }, [
       el('h3', { class: 'card__title' }, item.name),
+      item.locations?.length ? renderLocationStatuses(item.locations) : null,
       item.description ? el('p', { class: 'card__desc' }, item.description) : null,
       variants.length ? renderVariants(variants) : null,
       el('div', { class: 'card__row' }, [
@@ -142,6 +230,7 @@ function getVariants(item) {
       name: variant.name || variant.label || variant.size || variant.presentation || `Opción ${index + 1}`,
       price: Number(variant.price ?? variant.finalPrice ?? variant.salePrice),
       inventoryLocal: variant.inventoryLocal ?? variant.stock ?? variant.quantity,
+      locations: Array.isArray(variant.locations) ? variant.locations : undefined,
     }))
     .filter((variant) => Number.isFinite(variant.price));
 }
@@ -155,20 +244,42 @@ function getPriceLabel(item, variants) {
 }
 
 function renderVariants(variants) {
-  return el('div', { class: 'variants' }, variants.slice(0, 5).map((variant) => {
+  return el('div', { class: 'variants' }, variants.map((variant) => {
     const stock = Number(variant.inventoryLocal);
-    const stockLabel = Number.isFinite(stock) && stock <= 0 ? 'Agotado' : null;
-    return el('div', { class: `variant ${stockLabel ? 'variant--out' : ''}` }, [
+    const anyLocationAvailable = variant.locations?.some((loc) => loc.available);
+    const isOut = variant.locations?.length ? !anyLocationAvailable : Number.isFinite(stock) && stock <= 0;
+    return el('div', { class: `variant ${isOut ? 'variant--out' : ''}` }, [
       el('span', { class: 'variant__name' }, variant.name),
       el('span', { class: 'variant__meta' }, [
-        formatPrice(variant.price),
-        stockLabel ? ` · ${stockLabel}` : '',
+        el('span', { class: 'variant__price' }, formatPrice(variant.price)),
+        variant.locations?.length ? renderMiniLocationStatuses(variant.locations) : null,
       ]),
     ]);
   }));
 }
 
+function renderLocationStatuses(locations) {
+  return el('div', { class: 'location-statuses' }, locations.map((loc) => (
+    el('span', { class: `location-status ${loc.available ? 'location-status--yes' : 'location-status--no'}` }, [
+      el('span', { class: 'location-status__mark' }, loc.available ? '✓' : '×'),
+      el('span', { class: 'location-status__label' }, loc.label),
+    ])
+  )));
+}
+
+function renderMiniLocationStatuses(locations) {
+  return el('span', { class: 'variant-locations' }, locations.map((loc) => (
+    el('span', { class: `variant-location ${loc.available ? 'variant-location--yes' : 'variant-location--no'}`, title: loc.name }, `${loc.available ? '✓' : '×'} ${loc.label}`)
+  )));
+}
+
 function getAvailability(item) {
+  if (Array.isArray(item.locations) && item.locations.length) {
+    const anyAvailable = item.locations.some((loc) => loc.available);
+    const allAvailable = item.locations.every((loc) => loc.available);
+    if (!anyAvailable) return { label: 'Agotado', isOut: true };
+    return { label: allAvailable ? 'Ambos locales' : 'Disponible', isOut: false };
+  }
   const raw = item.inventoryLocal;
   const stock = Number(raw);
   if (!Number.isFinite(stock)) {

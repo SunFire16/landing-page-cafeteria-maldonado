@@ -5,7 +5,7 @@ export const CONFIG = Object.freeze({
   api: {
     baseUrl: '/api',
     timeoutMs: 8000,
-    cacheTtlMs: 60_000,
+    cacheTtlMs: 0,
   },
   links: {
     web: 'https://app-cafeteria-maldonado.web.app/',
@@ -32,7 +32,7 @@ export const CONFIG = Object.freeze({
   ui: {
     locationStorageKey: 'cm.location.v1',
     feedbackCooldownMs: 60_000,
-    tvRefreshMs: 60_000,
+    tvRefreshMs: 30_000,
   },
 });
 

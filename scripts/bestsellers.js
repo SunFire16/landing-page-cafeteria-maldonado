@@ -1,8 +1,8 @@
 // Render de productos más vendidos con scope local o global.
 
-import { getBestSellers } from './api.js?v=20260502-ambos-locales';
-import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-ambos-locales';
-import { getCurrentLocation } from './location.js?v=20260502-ambos-locales';
+import { getBestSellers } from './api.js?v=20260502-unified-stock';
+import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-unified-stock';
+import { getCurrentLocation } from './location.js?v=20260502-unified-stock';
 
 export async function renderBestSellers(container, { scope = 'location', limit = 6 } = {}) {
   const loc = getCurrentLocation();
@@ -45,6 +45,11 @@ function renderList(container, items) {
 
 function renderCard(item, rank) {
   const price = Number(item.price);
+  const variants = getVariants(item);
+  const variantPrices = variants.map((variant) => variant.price).filter((value) => Number.isFinite(value) && value > 0);
+  const priceLabel = Number.isFinite(price) && price > 0
+    ? formatPrice(price)
+    : variantPrices.length ? `Desde ${formatPrice(Math.min(...variantPrices))}` : 'Ver opciones';
   return el('article', { class: 'card card--best' }, [
     el('div', { class: 'card__media' }, [
       el('span', { class: 'rank-badge', 'aria-label': `Top ${rank}` }, `#${rank}`),
@@ -52,12 +57,37 @@ function renderCard(item, rank) {
     ]),
     el('div', { class: 'card__body' }, [
       el('h3', { class: 'card__title' }, item.name),
+      variants.length ? renderVariants(variants) : null,
       el('div', { class: 'card__row' }, [
-        el('span', { class: 'card__price' }, Number.isFinite(price) && price > 0 ? formatPrice(price) : 'Ver opciones'),
+        el('span', { class: 'card__price' }, priceLabel),
         item.category ? el('span', { class: 'tag' }, item.category) : null,
       ]),
     ]),
   ]);
+}
+
+function getVariants(item) {
+  const raw = item.variants || [];
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((variant, index) => ({
+      id: variant.id || String(index),
+      name: variant.name || `Opción ${index + 1}`,
+      price: Number(variant.price),
+      inventoryLocal: variant.inventoryLocal,
+    }))
+    .filter((variant) => Number.isFinite(variant.price));
+}
+
+function renderVariants(variants) {
+  return el('div', { class: 'variants variants--compact' }, variants.slice(0, 4).map((variant) => {
+    const stock = Number(variant.inventoryLocal);
+    const stockLabel = Number.isFinite(stock) && stock <= 0 ? ' · Agotado' : '';
+    return el('div', { class: `variant ${stockLabel ? 'variant--out' : ''}` }, [
+      el('span', { class: 'variant__name' }, variant.name),
+      el('span', { class: 'variant__meta' }, `${formatPrice(variant.price)}${stockLabel}`),
+    ]);
+  }));
 }
 
 function renderEmpty(container) {

@@ -1,7 +1,7 @@
 // Cliente HTTP para los endpoints públicos de la landing.
 // Implementa: timeout, parsing seguro, normalización de errores y caché en memoria.
 
-import { CONFIG } from './config.js?v=20260502-ambos-locales';
+import { CONFIG } from './config.js?v=20260502-unified-stock';
 
 const memoryCache = new Map();
 
@@ -77,14 +77,14 @@ export class ApiError extends Error {
 
 export function getMenuDelDia(locationId) {
   return request('/landingMenuDelDia', {
-    params: { locationId, v: Math.floor(Date.now() / 30_000) },
+    params: { locationId, v: Date.now() },
     cacheKey: `menu:${locationId}`,
   });
 }
 
 export function getBestSellers({ scope = 'global', locationId, limit = 6 } = {}) {
   return request('/landingBestSellers', {
-    params: { scope, locationId, limit, v: Math.floor(Date.now() / 60_000) },
+    params: { scope, locationId, limit, v: Math.floor(Date.now() / 30_000) },
     cacheKey: `best:${scope}:${locationId ?? '-'}:${limit}`,
   });
 }
