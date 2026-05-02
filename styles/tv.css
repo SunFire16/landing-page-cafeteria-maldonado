@@ -57,7 +57,7 @@ body.tv {
 .location-menus--tv .location-menu__updated { font-size: 0.9rem; }
 .location-menus--tv .grid-menu { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); margin-top: 0; }
 
-@media (max-width: 1180px) {
+@media (max-width: 820px) {
   .location-menus--tv { grid-template-columns: 1fr; }
 }
 
