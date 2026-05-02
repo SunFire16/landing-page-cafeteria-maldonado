@@ -342,7 +342,7 @@ body.tv {
 .unified-menu-wrap--tv[data-density="dense"] {
   display: grid !important;
   grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
-  grid-template-rows: none !important;
+  grid-template-rows: repeat(var(--tv-rows, 2), minmax(0, 1fr)) !important;
   grid-auto-rows: minmax(0, 1fr) !important;
   align-content: stretch !important;
 }
@@ -369,7 +369,7 @@ body.tv {
   margin: 0;
 }
 /* Cuando hay variantes, ocultar la fila inferior de precio "Desde" (las variantes ya lo muestran) */
-.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu:has(.variants) .card__row { display: none !important; }
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--has-variants .card__row { display: none !important; }
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card__price {
   font-size: clamp(1.4rem, 1.5vw, 1.9rem) !important;
 }

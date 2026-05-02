@@ -62,6 +62,17 @@ export async function renderAllMenus(container, { variant = 'landing' } = {}) {
     container.dataset.xlCount = String(xlCount);
     container.dataset.density = dense ? 'dense' : 'normal';
     container.dataset.products = String(products.length);
+    // Calcula filas equivalentes para el grid denso (3 compactas por fila + 1 fila por XL)
+    if (dense) {
+      const perRow = compactCount >= 7 ? 4 : compactCount >= 5 ? 3 : compactCount >= 3 ? 3 : 2;
+      const compactRows = Math.max(Math.ceil(compactCount / perRow), 0);
+      const totalRows = compactRows + xlCount;
+      container.style.setProperty('--tv-rows', String(totalRows || 1));
+      container.style.setProperty('--tv-per-row', String(perRow));
+    } else {
+      container.style.removeProperty('--tv-rows');
+      container.style.removeProperty('--tv-per-row');
+    }
     fragment.append(el('div', { class: `unified-menu unified-menu--${variant}` }, products.map((item) => renderCard(item, variant))));
   }
   // Swap atómico: limpiamos justo antes de insertar para evitar el flash.
@@ -220,7 +231,8 @@ function renderCard(item, variant) {
   const variants = getVariants(item);
   const priceLabel = getPriceLabel(item, variants);
   const sizeMod = variants.length >= 7 ? 'card--xl' : variants.length >= 5 ? 'card--lg' : '';
-  return el('article', { class: `card card--menu card--${variant} ${sizeMod} ${availability.isOut ? 'card--unavailable' : ''}` }, [
+  const hasVariants = variants.length ? 'card--has-variants' : '';
+  return el('article', { class: `card card--menu card--${variant} ${sizeMod} ${hasVariants} ${availability.isOut ? 'card--unavailable' : ''}` }, [
     el('div', { class: 'card__media' }, [
       safeImage(item.imageUrl, item.name),
       el('span', { class: `stock-badge ${availability.isOut ? 'stock-badge--out' : ''}` }, availability.label),
