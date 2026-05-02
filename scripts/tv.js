@@ -1,10 +1,10 @@
 // Entry point del Modo TV: muestra menú del día por sucursal con auto-refresh y exportables.
 
-import { CONFIG } from './config.js?v=20260502-tv-bigger';
-import { readLocationFromUrl } from './location.js?v=20260502-tv-bigger';
-import { renderAllMenus } from './menu.js?v=20260502-tv-bigger';
-import { exportNodeToImage, exportNodeToPdf } from './export.js?v=20260502-tv-bigger';
-import { track } from './analytics.js?v=20260502-tv-bigger';
+import { CONFIG } from './config.js?v=20260502-tv-allvar';
+import { readLocationFromUrl } from './location.js?v=20260502-tv-allvar';
+import { renderAllMenus } from './menu.js?v=20260502-tv-allvar';
+import { exportNodeToImage, exportNodeToPdf } from './export.js?v=20260502-tv-allvar';
+import { track } from './analytics.js?v=20260502-tv-allvar';
 
 readLocationFromUrl();
 

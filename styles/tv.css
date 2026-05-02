@@ -96,7 +96,8 @@ body.tv {
   display: grid;
   gap: 14px;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  grid-auto-rows: 1fr;
+  grid-template-rows: auto 1fr;
+  grid-auto-rows: minmax(0, 1fr);
   align-content: stretch;
   align-items: stretch;
   margin: 0;
@@ -106,25 +107,27 @@ body.tv {
 }
 .tv-grid.unified-menu-wrap > .unified-menu { display: contents; }
 
-/* Distribución por cantidad de variantes — todo en una sola fila si es posible. */
-.unified-menu--tv .card--menu { grid-column: span 3; }
-.unified-menu--tv .card--menu.card--lg { grid-column: span 4; }
-.unified-menu--tv .card--menu.card--xl { grid-column: span 6; }
+/* Layout por tamaño:
+   - card normal (≤4 variantes): span 6, fila chica
+   - card--lg (5-6 variantes): span 6, fila chica
+   - card--xl (≥7 variantes): span 12, fila grande con todas sus variantes visibles */
+.unified-menu--tv .card--menu { grid-column: span 6; grid-row: 1; }
+.unified-menu--tv .card--menu.card--lg { grid-column: span 6; grid-row: 1; }
+.unified-menu--tv .card--menu.card--xl { grid-column: span 12; grid-row: 2; }
 
-@media (max-width: 1400px) {
-  .unified-menu--tv .card--menu { grid-column: span 4; }
-  .unified-menu--tv .card--menu.card--lg { grid-column: span 5; }
-  .unified-menu--tv .card--menu.card--xl { grid-column: span 6; }
-}
+/* Si NO hay tarjeta XL, distribuye a 4 columnas las normales/lg en una sola fila */
+.unified-menu--tv:not(:has(.card--xl)) .card--menu { grid-column: span 4; }
+.unified-menu--tv:not(:has(.card--xl)) .card--menu.card--lg { grid-column: span 6; }
+
 @media (max-width: 1100px) {
-  .unified-menu--tv .card--menu { grid-column: span 6; }
-  .unified-menu--tv .card--menu.card--lg { grid-column: span 6; }
-  .unified-menu--tv .card--menu.card--xl { grid-column: span 12; }
+  .unified-menu--tv .card--menu,
+  .unified-menu--tv .card--menu.card--lg { grid-column: span 6; grid-row: auto; }
+  .unified-menu--tv .card--menu.card--xl { grid-column: span 12; grid-row: auto; }
 }
 @media (max-width: 720px) {
   .unified-menu--tv .card--menu,
   .unified-menu--tv .card--menu.card--lg,
-  .unified-menu--tv .card--menu.card--xl { grid-column: span 12; }
+  .unified-menu--tv .card--menu.card--xl { grid-column: span 12; grid-row: auto; }
 }
 
 /* ---------- Card ---------- */
@@ -171,7 +174,10 @@ body.tv {
 .unified-menu--tv .card--menu.card--lg,
 .unified-menu--tv .card--menu.card--xl {
   grid-template-rows: none;
-  grid-template-columns: 24% 1fr;
+  grid-template-columns: 22% 1fr;
+}
+.unified-menu--tv .card--xl {
+  grid-template-columns: 18% 1fr;
 }
 .unified-menu--tv .card--lg .card__media,
 .unified-menu--tv .card--xl .card__media {
@@ -190,7 +196,7 @@ body.tv {
   padding: 14px 18px 16px;
   min-width: 0;
   min-height: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 .unified-menu--tv .card__title {
   font-family: 'Playfair Display', serif;
@@ -276,7 +282,7 @@ body.tv {
   padding-top: 10px;
   border-top: 1px solid rgba(107,63,29,0.18);
   min-height: 0;
-  overflow: hidden;
+  overflow: visible;
   flex: 1 1 auto;
   align-content: start;
 }
@@ -284,8 +290,8 @@ body.tv {
   grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
 }
 .unified-menu--tv .card--xl .variants {
-  grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
-  gap: 5px 8px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 6px 10px;
 }
 .unified-menu--tv .variant {
   display: flex;
