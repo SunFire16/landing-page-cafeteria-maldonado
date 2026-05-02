@@ -211,15 +211,15 @@ body.tv {
 }
 .unified-menu--tv .card__title {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(1.8rem, 2.1vw, 2.6rem);
+  font-size: clamp(1.55rem, 1.85vw, 2.25rem);
   line-height: 1.05;
   color: #3a2113;
   font-weight: 800;
   margin: 0;
   flex: none;
 }
-.unified-menu--tv .card--lg .card__title { font-size: clamp(1.55rem, 1.7vw, 2.1rem); }
-.unified-menu--tv .card--xl .card__title { font-size: clamp(1.35rem, 1.45vw, 1.8rem); }
+.unified-menu--tv .card--lg .card__title { font-size: clamp(1.35rem, 1.5vw, 1.85rem); }
+.unified-menu--tv .card--xl .card__title { font-size: clamp(1.15rem, 1.3vw, 1.6rem); }
 
 .unified-menu--tv .card__desc {
   display: -webkit-box;
@@ -240,7 +240,7 @@ body.tv {
 }
 .unified-menu--tv .card__price {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(1.55rem, 1.65vw, 2rem);
+  font-size: clamp(1.35rem, 1.45vw, 1.75rem);
   color: #6b3f1d; font-weight: 800;
 }
 .unified-menu--tv .tag {
@@ -309,14 +309,14 @@ body.tv {
   flex-direction: column;
   gap: var(--variant-gap, 4px);
   align-items: stretch;
-  font-size: calc(1.15rem * var(--variant-fs, 1));
+  font-size: calc(1.28rem * var(--variant-fs, 1));
   padding: var(--variant-pad, 8px 12px);
   background: rgba(107,63,29,0.05);
   border-radius: 12px;
   min-width: 0;
 }
-.unified-menu--tv .card--lg .variant { font-size: calc(1rem * var(--variant-fs, 1)); padding: var(--variant-pad, 6px 10px); gap: var(--variant-gap, 3px); }
-.unified-menu--tv .card--xl .variant { font-size: calc(0.85rem * var(--variant-fs, 1)); padding: var(--variant-pad, 5px 9px); gap: var(--variant-gap, 2px); border-radius: 10px; }
+.unified-menu--tv .card--lg .variant { font-size: calc(1.12rem * var(--variant-fs, 1)); padding: var(--variant-pad, 6px 10px); gap: var(--variant-gap, 3px); }
+.unified-menu--tv .card--xl .variant { font-size: calc(0.95rem * var(--variant-fs, 1)); padding: var(--variant-pad, 5px 9px); gap: var(--variant-gap, 2px); border-radius: 10px; }
 .unified-menu--tv .variant__name {
   font-weight: 700; color: #3a2113;
   white-space: normal; overflow: visible; text-overflow: clip;
@@ -407,7 +407,7 @@ body.tv {
 }
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card__title,
 .unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card__title {
-  font-size: clamp(1.3rem, 1.6vw, 2rem) !important;
+  font-size: clamp(1.1rem, 1.4vw, 1.75rem) !important;
   margin: 0;
 }
 /* Cuando hay variantes, ocultar la fila inferior de precio "Desde" (las variantes ya lo muestran) */
@@ -415,7 +415,7 @@ body.tv {
 .unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--has-variants .card__row { display: none !important; }
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card__price,
 .unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card__price {
-  font-size: clamp(1.3rem, 1.4vw, 1.8rem) !important;
+  font-size: clamp(1.1rem, 1.2vw, 1.55rem) !important;
 }
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .location-status,
 .unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .location-status {
@@ -434,7 +434,7 @@ body.tv {
 }
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .variant,
 .unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .variant {
-  font-size: calc(1rem * var(--variant-fs, 1)) !important;
+  font-size: calc(1.12rem * var(--variant-fs, 1)) !important;
   padding: var(--variant-pad, 6px 10px) !important;
   gap: var(--variant-gap, 2px) !important;
   border-radius: 10px;
