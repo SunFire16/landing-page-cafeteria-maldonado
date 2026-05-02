@@ -8,7 +8,7 @@ body.tv {
 }
 .tv-shell { min-height: 100vh; display: grid; grid-template-rows: auto 1fr auto; }
 
-.tv-header { display: flex; align-items: center; gap: 24px; padding: 28px 40px; border-bottom: 1px solid rgba(107,63,29,0.18); background: #3b2412; }
+.tv-header { display: flex; align-items: center; gap: 24px; padding: 24px 40px; border-bottom: 1px solid rgba(107,63,29,0.18); background: #3b2412; }
 .tv-header__brand { display: flex; align-items: center; gap: 16px; }
 .tv-header__brand img { width: 64px; height: 64px; border-radius: 50%; background: #fff; padding: 4px; }
 .tv-header__title { font-family: var(--font-display); font-size: 2rem; color: #fff; }
@@ -16,10 +16,10 @@ body.tv {
 .tv-header__loc strong { font-family: var(--font-display); color: #fff; }
 .tv-header__time { font-variant-numeric: tabular-nums; font-size: 1.4rem; color: rgba(255,255,255,0.85); }
 
-.tv-main { padding: 28px 40px 128px; overflow: auto; color: var(--color-ink); }
+.tv-main { padding: 24px 172px 28px 40px; overflow: auto; color: var(--color-ink); }
 .tv-eyebrow { color: var(--color-gold); font-size: 1rem; letter-spacing: 0.18em; text-transform: uppercase; }
 .tv-title { font-size: clamp(2.4rem, 4vw, 3.6rem); margin-top: 4px; }
-.tv-grid { margin-top: 24px; display: grid; gap: 22px; grid-template-columns: repeat(3, 1fr); }
+.tv-grid { margin-top: 24px; display: grid; gap: 14px; grid-template-columns: 1fr; }
 @media (max-width: 1280px) { .tv-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 720px)  { .tv-grid { grid-template-columns: 1fr; } }
 
@@ -29,11 +29,15 @@ body.tv {
   color: var(--color-ink);
   border-radius: 18px;
   box-shadow: 0 10px 30px rgba(42,24,16,0.12);
+  display: grid;
+  grid-template-columns: minmax(140px, 36%) 1fr;
+  min-height: 168px;
 }
 .tv-grid .card__title { color: var(--color-coffee-dark); font-size: 1.5rem; }
 .tv-grid .card__desc { color: var(--color-ink-soft); font-size: 1.05rem; }
 .tv-grid .card__price { color: var(--color-coffee); font-size: 1.4rem; }
-.tv-grid .card__media { aspect-ratio: 16/10; }
+.tv-grid .card__media { aspect-ratio: auto; min-height: 168px; height: 100%; }
+.tv-grid .card__body { min-width: 0; }
 .tv-grid .tag { background: var(--color-surface-2); color: var(--color-coffee-dark); }
 .tv-grid .stock-badge { font-size: 1rem; padding: 7px 12px; }
 .tv-grid .card--unavailable { opacity: 0.82; }
@@ -42,11 +46,11 @@ body.tv {
 
 .location-menus--tv {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 26px;
+  gap: 20px;
 }
 .location-menus--tv .location-menu {
   background: rgba(255,255,255,0.78);
-  padding: 18px;
+  padding: 16px;
 }
 .location-menus--tv .location-menu__title { font-size: 1.25rem; }
 .location-menus--tv .location-menu__eyebrow { font-size: 0.88rem; }
@@ -66,23 +70,29 @@ body.tv {
 .tv-footer__qr { display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,0.85); }
 
 .tv-controls {
-  position: fixed; right: 16px; bottom: 18px; display: flex; gap: 8px;
-  background: rgba(0,0,0,0.55); padding: 8px; border-radius: var(--radius-pill);
+  position: fixed; right: 18px; top: 154px; bottom: auto; display: flex; flex-direction: column; gap: 8px;
+  background: rgba(42,24,16,0.72); padding: 8px; border-radius: 20px;
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   z-index: 100;
+  width: 136px;
 }
 .tv-controls .btn {
   box-shadow: none;
-  padding: 10px 16px;
+  padding: 10px 12px;
   color: #fff;
   border-color: rgba(255,255,255,0.28);
   background: rgba(255,255,255,0.08);
+  width: 100%;
 }
 .tv-controls .btn:hover { background: rgba(255,255,255,0.16); }
 .tv-controls select.btn { color: #fff; }
 
 @media (max-width: 900px) {
-  .tv-controls { left: 12px; right: 12px; overflow-x: auto; border-radius: 20px; }
+  .tv-main { padding-right: 40px; padding-bottom: 128px; }
+  .location-menus--tv { grid-template-columns: 1fr; }
+  .tv-grid .card { grid-template-columns: 1fr; }
+  .tv-grid .card__media { aspect-ratio: 16 / 8; min-height: 0; }
+  .tv-controls { top: auto; left: 12px; right: 12px; bottom: 18px; width: auto; flex-direction: row; overflow-x: auto; border-radius: 20px; }
   .tv-controls .btn { white-space: nowrap; }
 }
 
