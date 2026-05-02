@@ -452,6 +452,22 @@ body.tv {
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu.card--xl,
 .unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--menu.card--xl { grid-column: 1 / -1 !important; }
 
+/* XL en denso: variantes en 2 filas que llenan el espacio vertical.
+   minmax(280px,1fr) fuerza ~4 cols en una card ancha → 2 filas para 8 variantes.
+   align-content:stretch + height:100% hacen que las filas llenen el alto disponible. */
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu.card--xl .variants,
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--menu.card--xl .variants {
+  grid-template-columns: repeat(auto-fill, minmax(clamp(220px, 22%, 320px), 1fr)) !important;
+  align-content: stretch !important;
+  overflow: visible;
+}
+.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--menu.card--xl .variant,
+.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--menu.card--xl .variant {
+  font-size: calc(1.22rem * var(--variant-fs, 1)) !important;
+  height: 100%;
+  justify-content: center;
+}
+
 .unified-menu--tv .variant-locations { gap: 5px; }
 .unified-menu--tv .variant-location {
   font-size: 0.78em;

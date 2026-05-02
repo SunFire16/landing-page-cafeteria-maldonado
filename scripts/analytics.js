@@ -1,7 +1,7 @@
 // Registro ligero de eventos. Si en el futuro se conecta GA4/Plausible/etc.,
 // solo hay que cambiar la implementación de `track` sin tocar consumidores.
 
-import { getCurrentLocation } from './location.js?v=20260502-tv-dense11';
+import { getCurrentLocation } from './location.js?v=20260502-tv-dense12';
 
 const queue = [];
 
