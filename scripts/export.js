@@ -2,7 +2,7 @@
 // Renderiza siempre a tamaño TV fijo (1920x1080) para que la salida
 // se vea limpia, sin recortes ni layout responsivo del viewport actual.
 
-import { fitVariantsToCards } from './menu.js?v=20260502-tv-dense6';
+import { fitVariantsToCards } from './menu.js?v=20260502-tv-dense7';
 
 const CDN = {
   html2canvas: 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js',
@@ -41,6 +41,39 @@ function nextFrame() {
   return new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 }
 
+// Proxy de imágenes con CORS habilitado (para sortear Firebase Storage sin CORS).
+function toProxiedUrl(url) {
+  if (!url || url.startsWith('data:') || url.startsWith('blob:')) return url;
+  try {
+    const u = new URL(url, location.href);
+    if (u.origin === location.origin) return url; // mismo origen, no hace falta proxy
+    // images.weserv.nl requiere url SIN protocolo, pero acepta query con params escapados.
+    const stripped = u.toString().replace(/^https?:\/\//, '');
+    return 'https://images.weserv.nl/?url=' + encodeURIComponent(stripped);
+  } catch {
+    return url;
+  }
+}
+
+function swapImageSources(node) {
+  const restores = [];
+  node.querySelectorAll('img').forEach((img) => {
+    const original = img.getAttribute('src');
+    if (!original) return;
+    const proxied = toProxiedUrl(original);
+    if (proxied === original) return;
+    restores.push({ img, original });
+    img.setAttribute('crossorigin', 'anonymous');
+    img.setAttribute('src', proxied);
+  });
+  return () => {
+    restores.forEach(({ img, original }) => {
+      img.removeAttribute('crossorigin');
+      img.setAttribute('src', original);
+    });
+  };
+}
+
 // Aplica un "tamaño TV" temporal al nodo y dispara el re-fit antes de capturar.
 async function withTvDimensions(node, fn) {
   document.body.classList.add('exporting');
@@ -56,6 +89,9 @@ async function withTvDimensions(node, fn) {
   node.style.minHeight = TARGET_H + 'px';
   node.style.position = 'relative';
   document.body.style.overflow = 'hidden';
+
+  // Cambiamos las imgs externas por proxy CORS para que html2canvas pueda leerlas
+  const restoreImgs = swapImageSources(node);
 
   const wrap = node.querySelector('.unified-menu-wrap');
   if (wrap) {
@@ -82,6 +118,7 @@ async function withTvDimensions(node, fn) {
   try {
     return await fn();
   } finally {
+    restoreImgs();
     node.setAttribute('style', prev.nodeStyle);
     document.body.style.overflow = prev.bodyOverflow;
     document.body.classList.remove('exporting');

@@ -1,9 +1,9 @@
 // Encuesta privada de satisfacción. Validación cliente + envío al backend.
 
-import { sendFeedback } from './api.js?v=20260502-tv-dense6';
-import { CONFIG } from './config.js?v=20260502-tv-dense6';
-import { getCurrentLocation } from './location.js?v=20260502-tv-dense6';
-import { track } from './analytics.js?v=20260502-tv-dense6';
+import { sendFeedback } from './api.js?v=20260502-tv-dense7';
+import { CONFIG } from './config.js?v=20260502-tv-dense7';
+import { getCurrentLocation } from './location.js?v=20260502-tv-dense7';
+import { track } from './analytics.js?v=20260502-tv-dense7';
 
 const RATING_FIELDS = ['ratingGeneral', 'ratingSpeed', 'ratingAccuracy'];
 

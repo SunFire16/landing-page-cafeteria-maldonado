@@ -1,6 +1,6 @@
 // Utilidades DOM mínimas y seguras (sin innerHTML para datos dinámicos).
 
-import { CONFIG } from './config.js?v=20260502-tv-dense6';
+import { CONFIG } from './config.js?v=20260502-tv-dense7';
 
 export function el(tag, props = {}, children = []) {
   const node = document.createElement(tag);
