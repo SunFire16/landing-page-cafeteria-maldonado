@@ -1,9 +1,9 @@
 // Render del bloque "Menú del día" (landing) y para Modo TV.
 
-import { getMenuDelDia } from './api.js?v=20260502-unified-wide';
-import { CONFIG } from './config.js?v=20260502-unified-wide';
-import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-unified-wide';
-import { getCurrentLocation } from './location.js?v=20260502-unified-wide';
+import { getMenuDelDia } from './api.js?v=20260502-tv-redesign';
+import { CONFIG } from './config.js?v=20260502-tv-redesign';
+import { el, clear, formatPrice, safeImage } from './dom.js?v=20260502-tv-redesign';
+import { getCurrentLocation } from './location.js?v=20260502-tv-redesign';
 
 export async function renderMenu(container, { variant = 'landing' } = {}) {
   const loc = getCurrentLocation();
@@ -203,7 +203,8 @@ function renderCard(item, variant) {
   const availability = getAvailability(item);
   const variants = getVariants(item);
   const priceLabel = getPriceLabel(item, variants);
-  return el('article', { class: `card card--menu card--${variant} ${availability.isOut ? 'card--unavailable' : ''}` }, [
+  const sizeMod = variants.length >= 7 ? 'card--xl' : variants.length >= 5 ? 'card--lg' : '';
+  return el('article', { class: `card card--menu card--${variant} ${sizeMod} ${availability.isOut ? 'card--unavailable' : ''}` }, [
     el('div', { class: 'card__media' }, [
       safeImage(item.imageUrl, item.name),
       el('span', { class: `stock-badge ${availability.isOut ? 'stock-badge--out' : ''}` }, availability.label),

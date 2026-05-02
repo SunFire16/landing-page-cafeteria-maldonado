@@ -1,9 +1,9 @@
 // Encuesta privada de satisfacción. Validación cliente + envío al backend.
 
-import { sendFeedback } from './api.js?v=20260502-unified-wide';
-import { CONFIG } from './config.js?v=20260502-unified-wide';
-import { getCurrentLocation } from './location.js?v=20260502-unified-wide';
-import { track } from './analytics.js?v=20260502-unified-wide';
+import { sendFeedback } from './api.js?v=20260502-tv-redesign';
+import { CONFIG } from './config.js?v=20260502-tv-redesign';
+import { getCurrentLocation } from './location.js?v=20260502-tv-redesign';
+import { track } from './analytics.js?v=20260502-tv-redesign';
 
 const RATING_FIELDS = ['ratingGeneral', 'ratingSpeed', 'ratingAccuracy'];
 

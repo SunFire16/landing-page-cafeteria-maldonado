@@ -1,10 +1,10 @@
 // Entry point del Modo TV: muestra menú del día por sucursal con auto-refresh y exportables.
 
-import { CONFIG } from './config.js?v=20260502-unified-wide';
-import { readLocationFromUrl } from './location.js?v=20260502-unified-wide';
-import { renderAllMenus } from './menu.js?v=20260502-unified-wide';
-import { exportNodeToImage, exportNodeToPdf } from './export.js?v=20260502-unified-wide';
-import { track } from './analytics.js?v=20260502-unified-wide';
+import { CONFIG } from './config.js?v=20260502-tv-redesign';
+import { readLocationFromUrl } from './location.js?v=20260502-tv-redesign';
+import { renderAllMenus } from './menu.js?v=20260502-tv-redesign';
+import { exportNodeToImage, exportNodeToPdf } from './export.js?v=20260502-tv-redesign';
+import { track } from './analytics.js?v=20260502-tv-redesign';
 
 readLocationFromUrl();
 
@@ -25,11 +25,36 @@ async function refresh() {
 }
 
 function bindControls() {
+  const dockToggle = document.querySelector('[data-tv-dock-toggle]');
+  const dockMenu = document.querySelector('[data-tv-dock-menu]');
+  const dock = document.querySelector('[data-tv-dock]');
+
+  function setDockOpen(open) {
+    if (!dockMenu || !dockToggle || !dock) return;
+    dockMenu.hidden = !open;
+    dockToggle.setAttribute('aria-expanded', String(open));
+    dock.classList.toggle('tv-dock--open', open);
+  }
+
+  dockToggle?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    setDockOpen(dockMenu?.hidden ?? false);
+  });
+
+  document.addEventListener('click', (e) => {
+    if (dock && !dock.contains(e.target)) setDockOpen(false);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') setDockOpen(false);
+  });
+
   document.querySelector('[data-tv-fullscreen]')?.addEventListener('click', async () => {
     try {
       if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
       else await document.exitFullscreen();
     } catch { /* ignore */ }
+    setDockOpen(false);
   });
 
   document.querySelector('[data-tv-export-img]')?.addEventListener('click', async () => {
@@ -37,6 +62,7 @@ function bindControls() {
       track('tv_export', { format: 'png' });
       await exportNodeToImage(refs.shell, fileNameFor('png'));
     } catch (e) { alert(`No se pudo exportar imagen: ${e.message}`); }
+    setDockOpen(false);
   });
 
   document.querySelector('[data-tv-export-pdf]')?.addEventListener('click', async () => {
@@ -44,6 +70,7 @@ function bindControls() {
       track('tv_export', { format: 'pdf' });
       await exportNodeToPdf(refs.shell, fileNameFor('pdf'));
     } catch (e) { alert(`No se pudo exportar PDF: ${e.message}`); }
+    setDockOpen(false);
   });
 
 }

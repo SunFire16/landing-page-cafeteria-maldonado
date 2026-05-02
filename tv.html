@@ -9,9 +9,9 @@
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/styles/base.css?v=20260502-unified-wide" />
-  <link rel="stylesheet" href="/styles/tv.css?v=20260502-unified-wide" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles/base.css?v=20260502-tv-redesign" />
+  <link rel="stylesheet" href="/styles/tv.css?v=20260502-tv-redesign" />
 </head>
 <body class="tv">
   <div class="tv-shell" data-tv-shell>
@@ -23,31 +23,35 @@
           <h1 class="tv-header__title">Menú del día</h1>
         </div>
       </div>
-      <div class="tv-header__loc">
-        <strong>Ambas sucursales</strong>
+      <div class="tv-header__center">
+        <span class="tv-header__pill">📍 Local 1 · Afuera</span>
+        <span class="tv-header__pill">📍 Local 2 · Adentro</span>
+        <span class="tv-header__time" data-tv-time aria-label="Hora actual">--:--</span>
       </div>
-      <div class="tv-header__time" data-tv-time aria-label="Hora actual">--:--</div>
+      <div class="tv-header__qr">
+        <img src="/Codigo_QR_Personalizado.png" alt="Escanea para pedir desde tu celular" />
+        <div class="tv-header__qr-text">
+          <span class="tv-header__qr-eyebrow">Escanea y pide</span>
+          <strong>desde tu celular</strong>
+        </div>
+      </div>
     </header>
 
     <main class="tv-main">
       <div data-tv-menu class="tv-grid"></div>
     </main>
-
-    <footer class="tv-footer">
-      <div class="tv-footer__qr">
-        <span>📲 Pide desde tu celular: <strong>app-cafeteria-maldonado.web.app</strong></span>
-      </div>
-      <div>🤖 Disponible también en Play Store</div>
-    </footer>
   </div>
 
-  <div class="tv-controls" aria-label="Controles del modo TV">
-    <button class="btn btn--ghost" type="button" data-tv-fullscreen>⛶ Pantalla completa</button>
-    <button class="btn btn--ghost" type="button" data-tv-export-img>🖼 Imagen</button>
-    <button class="btn btn--ghost" type="button" data-tv-export-pdf>📄 PDF</button>
-    <a class="btn btn--ghost" href="/">↩ Volver</a>
+  <div class="tv-dock" data-tv-dock aria-label="Controles del modo TV">
+    <button class="tv-dock__toggle" type="button" data-tv-dock-toggle aria-label="Mostrar controles" aria-expanded="false">⚙</button>
+    <div class="tv-dock__menu" data-tv-dock-menu hidden>
+      <button class="tv-dock__btn" type="button" data-tv-fullscreen title="Pantalla completa">⛶</button>
+      <button class="tv-dock__btn" type="button" data-tv-export-img title="Exportar imagen">🖼</button>
+      <button class="tv-dock__btn" type="button" data-tv-export-pdf title="Exportar PDF">📄</button>
+      <a class="tv-dock__btn" href="/" title="Volver a la landing">↩</a>
+    </div>
   </div>
 
-  <script type="module" src="/scripts/tv.js?v=20260502-unified-wide"></script>
+  <script type="module" src="/scripts/tv.js?v=20260502-tv-redesign"></script>
 </body>
 </html>
