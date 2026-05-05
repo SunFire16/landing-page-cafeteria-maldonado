@@ -1,6 +1,6 @@
 // Utilidades DOM mínimas y seguras (sin innerHTML para datos dinámicos).
 
-import { CONFIG } from './config.js?v=20260502-tv-dense15';
+import { CONFIG } from './config.js?v=20260505-tv-dense19';
 
 export function el(tag, props = {}, children = []) {
   const node = document.createElement(tag);
@@ -30,11 +30,12 @@ export function clear(node) {
 export function formatPrice(value) {
   const num = Number(value);
   if (!Number.isFinite(num)) return '—';
-  return new Intl.NumberFormat('es-HN', {
-    style: 'currency',
-    currency: 'HNL',
+  const abs = Math.abs(num);
+  const formatted = new Intl.NumberFormat('es-HN', {
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(num);
+  }).format(abs);
+  return `${num < 0 ? '-' : ''}L. ${formatted}`;
 }
 
 export function safeImage(url, alt) {

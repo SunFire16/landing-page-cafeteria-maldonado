@@ -1,10 +1,10 @@
 // Entry point del Modo TV: muestra menú del día por sucursal con auto-refresh y exportables.
 
-import { CONFIG } from './config.js?v=20260505-tv-dense18';
-import { readLocationFromUrl } from './location.js?v=20260505-tv-dense18';
-import { renderAllMenus } from './menu.js?v=20260505-tv-dense18';
-import { exportNodeToImage, exportNodeToPdf } from './export.js?v=20260505-tv-dense18';
-import { track } from './analytics.js?v=20260505-tv-dense18';
+import { CONFIG } from './config.js?v=20260505-tv-dense19';
+import { readLocationFromUrl } from './location.js?v=20260505-tv-dense19';
+import { renderAllMenus } from './menu.js?v=20260505-tv-dense19';
+import { exportNodeToImage, exportNodeToPdf } from './export.js?v=20260505-tv-dense19';
+import { track } from './analytics.js?v=20260505-tv-dense19';
 
 readLocationFromUrl();
 
