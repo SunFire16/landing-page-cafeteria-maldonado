@@ -169,6 +169,8 @@ export function fitVariantsToCards(container) {
       { fs: 0.64, pad: '3px 6px',   gap: '2px 5px' },
       { fs: 0.56, pad: '2px 5px',   gap: '2px 4px' },
       { fs: 0.50, pad: '2px 4px',   gap: '1px 4px' },
+      { fs: 0.44, pad: '1px 3px',   gap: '1px 3px' },
+      { fs: 0.38, pad: '1px 2px',   gap: '1px 2px' },
     ];
 
     const fits = () => variantsBox.scrollHeight - variantsBox.clientHeight <= 2;
@@ -184,12 +186,17 @@ export function fitVariantsToCards(container) {
       if (fits()) break;
     }
 
-    // Último recurso: si aún no caben, comprimir a "ultra" (chips inline 1-línea)
+    // Último recurso: seguir comprimiendo sin truncar texto.
     if (!fits()) {
-      variantsBox.classList.add('variants--ultra');
-      card.style.setProperty('--variant-fs', '0.66');
-      card.style.setProperty('--variant-pad', '2px 5px');
-      card.style.setProperty('--variant-gap', '2px 4px');
+      card.style.setProperty('--variant-fs', '0.34');
+      card.style.setProperty('--variant-pad', '1px 2px');
+      card.style.setProperty('--variant-gap', '1px 2px');
+
+      let fs = 0.34;
+      while (fs > 0.24 && !fits()) {
+        fs -= 0.02;
+        card.style.setProperty('--variant-fs', fs.toFixed(2));
+      }
     }
 
     fitCardTypography(card, Math.max(0, chosen.fs - 1));
@@ -200,15 +207,31 @@ function fitCardTypography(card, variantGrowthBias = 0) {
   const body = card.querySelector('.card__body');
   if (!body) return;
 
+  const minScale = 0.48;
+  const maxScale = 1.38;
   const sparePx = body.clientHeight - body.scrollHeight;
-  if (sparePx <= 6 && variantGrowthBias <= 0.02) {
-    card.style.setProperty('--card-scale', '1');
+
+  // Si se pasa de alto, reducimos tipografía hasta que todo quepa.
+  if (sparePx < -2) {
+    let scale = 1;
+    card.style.setProperty('--card-scale', scale.toFixed(2));
+    while (scale > minScale && body.scrollHeight - body.clientHeight > 2) {
+      scale -= 0.03;
+      card.style.setProperty('--card-scale', scale.toFixed(2));
+    }
     return;
   }
 
   const spareRatio = Math.max(0, sparePx) / Math.max(body.clientHeight, 1);
-  const scale = 1 + Math.min(0.34, spareRatio * 0.78 + variantGrowthBias * 0.2);
+  let scale = 1 + Math.min(0.34, spareRatio * 0.78 + variantGrowthBias * 0.2);
+  scale = Math.min(maxScale, Math.max(1, scale));
   card.style.setProperty('--card-scale', scale.toFixed(2));
+
+  // Ajuste fino: si crecer demasiado rompe el alto, retroceder suavemente.
+  while (scale > minScale && body.scrollHeight - body.clientHeight > 2) {
+    scale -= 0.02;
+    card.style.setProperty('--card-scale', scale.toFixed(2));
+  }
 }
 
 function mergeMenuResults(results) {
@@ -362,7 +385,8 @@ function renderCard(item, variant) {
   const sizeMod = variants.length >= 7 ? 'card--xl' : variants.length >= 5 ? 'card--lg' : '';
   const hasVariants = variants.length ? 'card--has-variants' : '';
   const hasLocations = Array.isArray(item.locations) && item.locations.length > 0;
-  const showInlineDescription = variant === 'tv' && hasLocations && Boolean(item.description);
+  const description = typeof item.description === 'string' ? item.description.trim() : '';
+  const showTitleDescription = Boolean(description);
   // Mostrar indicadores de local por variante SOLO si el producto está en ambos locales.
   // Si solo está en uno, todas las variantes comparten esa restricción → es redundante.
   const activeLocs = item.locations?.filter((l) => l.available).length ?? 0;
@@ -373,9 +397,12 @@ function renderCard(item, variant) {
       el('span', { class: `stock-badge ${availability.isOut ? 'stock-badge--out' : ''}` }, availability.label),
     ]),
     el('div', { class: 'card__body' }, [
-      el('h3', { class: 'card__title' }, item.name),
-      hasLocations ? renderLocationStatuses(item.locations, showInlineDescription ? item.description : null) : null,
-      item.description && !showInlineDescription ? el('p', { class: 'card__desc' }, item.description) : null,
+      el('div', { class: `card__head ${showTitleDescription ? 'card__head--with-desc' : ''}` }, [
+        el('h3', { class: 'card__title' }, item.name),
+        showTitleDescription ? el('p', { class: 'card__desc-head' }, description) : null,
+      ]),
+      hasLocations ? renderLocationStatuses(item.locations) : null,
+      description && !showTitleDescription ? el('p', { class: 'card__desc' }, description) : null,
       variants.length ? renderVariants(variants, showVariantLocations) : null,
       el('div', { class: 'card__row' }, [
         el('span', { class: 'card__price' }, priceLabel),
@@ -422,14 +449,13 @@ function renderVariants(variants, showVariantLocations = true) {
   }));
 }
 
-function renderLocationStatuses(locations, description) {
+function renderLocationStatuses(locations) {
   const children = locations.map((loc) => (
     el('span', { class: `location-status ${loc.available ? 'location-status--yes' : 'location-status--no'}` }, [
       el('span', { class: 'location-status__mark' }, loc.available ? '✓' : '×'),
       el('span', { class: 'location-status__label' }, loc.label),
     ])
   ));
-  if (description) children.push(el('span', { class: 'card__desc-inline' }, description));
   return el('div', { class: 'location-statuses' }, children);
 }
 
