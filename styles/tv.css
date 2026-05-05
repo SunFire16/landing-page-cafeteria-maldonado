@@ -143,6 +143,7 @@ body.tv {
 
 /* ---------- Card ---------- */
 .unified-menu--tv .card--menu {
+  --card-scale: 1;
   position: relative;
   background: linear-gradient(180deg, rgba(255,255,255,0.97), rgba(255,250,242,0.97));
   color: var(--color-ink);
@@ -211,15 +212,15 @@ body.tv {
 }
 .unified-menu--tv .card__title {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(1.55rem, 1.85vw, 2.25rem);
+  font-size: calc(clamp(1.55rem, 1.85vw, 2.25rem) * var(--card-scale, 1));
   line-height: 1.05;
   color: #3a2113;
   font-weight: 800;
   margin: 0;
   flex: none;
 }
-.unified-menu--tv .card--lg .card__title { font-size: clamp(1.35rem, 1.5vw, 1.85rem); }
-.unified-menu--tv .card--xl .card__title { font-size: clamp(1.15rem, 1.3vw, 1.6rem); }
+.unified-menu--tv .card--lg .card__title { font-size: calc(clamp(1.35rem, 1.5vw, 1.85rem) * var(--card-scale, 1)); }
+.unified-menu--tv .card--xl .card__title { font-size: calc(clamp(1.15rem, 1.3vw, 1.6rem) * var(--card-scale, 1)); }
 
 .unified-menu--tv .card__desc {
   display: -webkit-box;
@@ -240,12 +241,12 @@ body.tv {
 }
 .unified-menu--tv .card__price {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(1.35rem, 1.45vw, 1.75rem);
+  font-size: calc(clamp(1.35rem, 1.45vw, 1.75rem) * var(--card-scale, 1));
   color: #6b3f1d; font-weight: 800;
 }
 .unified-menu--tv .tag {
   background: rgba(107,63,29,0.10); color: #6b3f1d;
-  font-weight: 700; font-size: 1rem;
+  font-weight: 700; font-size: calc(1rem * var(--card-scale, 1));
   padding: 5px 12px; border-radius: 999px;
 }
 
@@ -270,38 +271,54 @@ body.tv {
 .unified-menu--tv .card--unavailable .card__title { color: #6e564a; }
 
 /* ---------- Disponibilidad por local ---------- */
-.unified-menu--tv .location-statuses { gap: 8px; flex-wrap: wrap; flex: none; }
+.unified-menu--tv .location-statuses {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: none;
+  min-width: 0;
+}
 .unified-menu--tv .location-status {
-  font-size: 1.1rem;
-  padding: 6px 14px;
+  font-size: calc(1.1rem * var(--card-scale, 1));
+  padding: calc(6px * var(--card-scale, 1)) calc(14px * var(--card-scale, 1));
   border-radius: 999px;
   font-weight: 800;
   letter-spacing: 0.02em;
 }
-.unified-menu--tv .card--lg .location-status { font-size: 1rem; padding: 5px 12px; }
-.unified-menu--tv .card--xl .location-status { font-size: 0.9rem; padding: 4px 10px; }
+.unified-menu--tv .card--lg .location-status { font-size: calc(1rem * var(--card-scale, 1)); padding: calc(5px * var(--card-scale, 1)) calc(12px * var(--card-scale, 1)); }
+.unified-menu--tv .card--xl .location-status { font-size: calc(0.9rem * var(--card-scale, 1)); padding: calc(4px * var(--card-scale, 1)) calc(10px * var(--card-scale, 1)); }
 .unified-menu--tv .location-status--yes { color: #1f8a4c; background: rgba(31,138,76,0.12); border-color: rgba(31,138,76,0.22); }
 .unified-menu--tv .location-status--no  { color: #b23a3a; background: rgba(178,58,58,0.12); border-color: rgba(178,58,58,0.22); }
 .unified-menu--tv .location-status__mark { font-size: 1em; }
 
-/* Descripción inline: aparece después de los pills de local, solo en TV denso para
-   cards grandes donde ya no hay bloque card__desc por falta de espacio. */
-.unified-menu--tv .card__desc-inline { display: none; }
-.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--lg .card__desc-inline,
-.unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card--xl .card__desc-inline,
-.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--lg .card__desc-inline,
-.unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--xl .card__desc-inline {
-  display: inline;
-  font-size: 0.82rem;
+/* Descripción inline: visible en todas las cards de TV para mantener consistencia. */
+.unified-menu--tv .card__desc-inline {
+  display: inline-flex;
+  align-items: center;
+  font-size: calc(0.95rem * var(--card-scale, 1));
   color: #6b4a32;
   font-style: italic;
-  opacity: 0.75;
+  opacity: 0.82;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 40ch;
+  max-width: min(54ch, 100%);
+  flex: 1 1 22ch;
+  min-width: 12ch;
   align-self: center;
-  margin-left: 4px;
+  margin-left: 2px;
+}
+
+/* En PC la descripcion debe verse siempre (compacta) para aprovechar el espacio extra. */
+@media (min-width: 1024px) {
+  .unified-menu--tv .card__desc-inline {
+    display: inline-flex !important;
+    font-size: calc(clamp(0.72rem, 0.78vw, 0.98rem) * var(--card-scale, 1));
+    max-width: min(68ch, 100%);
+    min-width: 14ch;
+    opacity: 0.85;
+  }
 }
 
 /* ---------- Variantes ---------- */
@@ -434,7 +451,7 @@ body.tv {
 }
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card__title,
 .unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card__title {
-  font-size: clamp(1.1rem, 1.4vw, 1.75rem) !important;
+  font-size: calc(clamp(1.1rem, 1.4vw, 1.75rem) * var(--card-scale, 1)) !important;
   margin: 0;
 }
 /* Cuando hay variantes, ocultar la fila inferior de precio "Desde" (las variantes ya lo muestran) */
@@ -442,12 +459,12 @@ body.tv {
 .unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card--has-variants .card__row { display: none !important; }
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .card__price,
 .unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .card__price {
-  font-size: clamp(1.1rem, 1.2vw, 1.55rem) !important;
+  font-size: calc(clamp(1.1rem, 1.2vw, 1.55rem) * var(--card-scale, 1)) !important;
 }
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .location-status,
 .unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .location-status {
-  font-size: 0.95rem !important;
-  padding: 3px 10px !important;
+  font-size: calc(0.95rem * var(--card-scale, 1)) !important;
+  padding: calc(3px * var(--card-scale, 1)) calc(10px * var(--card-scale, 1)) !important;
 }
 .unified-menu-wrap--tv[data-density="dense"] .unified-menu--tv .variants,
 .unified-menu-wrap--tv[data-density="dense-image"] .unified-menu--tv .variants {

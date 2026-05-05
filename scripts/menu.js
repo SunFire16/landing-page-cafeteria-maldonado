@@ -141,14 +141,28 @@ export function fitVariantsToCards(container) {
   const cards = container.querySelectorAll('.card--menu');
   cards.forEach((card) => {
     const variantsBox = card.querySelector('.variants');
-    if (!variantsBox) return;
     // Reset previo
     card.style.removeProperty('--variant-fs');
     card.style.removeProperty('--variant-pad');
     card.style.removeProperty('--variant-gap');
-    // Escalas progresivas (font-size, padding, gap) hasta que quepa
+    card.style.removeProperty('--card-scale');
+
+    if (!variantsBox) {
+      fitCardTypography(card);
+      return;
+    }
+
+    variantsBox.classList.remove('variants--ultra');
+
+    // Escalas en ambos sentidos: crecer cuando sobra espacio, o achicar si no cabe.
+    // Tomamos la más grande que aún quepa.
     const scales = [
-      { fs: 1,    pad: null,        gap: null },
+      { fs: 1.52, pad: '10px 14px', gap: '5px 10px' },
+      { fs: 1.42, pad: '9px 13px',  gap: '5px 9px' },
+      { fs: 1.32, pad: '8px 12px',  gap: '4px 9px' },
+      { fs: 1.22, pad: '7px 11px',  gap: '4px 8px' },
+      { fs: 1.12, pad: '7px 10px',  gap: '4px 8px' },
+      { fs: 1.00, pad: null,        gap: null },
       { fs: 0.92, pad: '5px 9px',   gap: '3px 8px' },
       { fs: 0.82, pad: '4px 8px',   gap: '3px 6px' },
       { fs: 0.72, pad: '3px 7px',   gap: '2px 6px' },
@@ -156,21 +170,45 @@ export function fitVariantsToCards(container) {
       { fs: 0.56, pad: '2px 5px',   gap: '2px 4px' },
       { fs: 0.50, pad: '2px 4px',   gap: '1px 4px' },
     ];
-    let i = 0;
-    while (i < scales.length - 1 && (variantsBox.scrollHeight - variantsBox.clientHeight > 2)) {
-      i += 1;
-      const s = scales[i];
-      card.style.setProperty('--variant-fs', String(s.fs));
-      if (s.pad) card.style.setProperty('--variant-pad', s.pad);
-      if (s.gap) card.style.setProperty('--variant-gap', s.gap);
+
+    const fits = () => variantsBox.scrollHeight - variantsBox.clientHeight <= 2;
+    let chosen = scales[scales.length - 1];
+
+    for (const scale of scales) {
+      chosen = scale;
+      card.style.setProperty('--variant-fs', String(scale.fs));
+      if (scale.pad) card.style.setProperty('--variant-pad', scale.pad);
+      else card.style.removeProperty('--variant-pad');
+      if (scale.gap) card.style.setProperty('--variant-gap', scale.gap);
+      else card.style.removeProperty('--variant-gap');
+      if (fits()) break;
     }
+
     // Último recurso: si aún no caben, comprimir a "ultra" (chips inline 1-línea)
-    if (variantsBox.scrollHeight - variantsBox.clientHeight > 2) {
+    if (!fits()) {
       variantsBox.classList.add('variants--ultra');
-    } else {
-      variantsBox.classList.remove('variants--ultra');
+      card.style.setProperty('--variant-fs', '0.66');
+      card.style.setProperty('--variant-pad', '2px 5px');
+      card.style.setProperty('--variant-gap', '2px 4px');
     }
+
+    fitCardTypography(card, Math.max(0, chosen.fs - 1));
   });
+}
+
+function fitCardTypography(card, variantGrowthBias = 0) {
+  const body = card.querySelector('.card__body');
+  if (!body) return;
+
+  const sparePx = body.clientHeight - body.scrollHeight;
+  if (sparePx <= 6 && variantGrowthBias <= 0.02) {
+    card.style.setProperty('--card-scale', '1');
+    return;
+  }
+
+  const spareRatio = Math.max(0, sparePx) / Math.max(body.clientHeight, 1);
+  const scale = 1 + Math.min(0.34, spareRatio * 0.78 + variantGrowthBias * 0.2);
+  card.style.setProperty('--card-scale', scale.toFixed(2));
 }
 
 function mergeMenuResults(results) {
@@ -323,6 +361,8 @@ function renderCard(item, variant) {
   const priceLabel = getPriceLabel(item, variants);
   const sizeMod = variants.length >= 7 ? 'card--xl' : variants.length >= 5 ? 'card--lg' : '';
   const hasVariants = variants.length ? 'card--has-variants' : '';
+  const hasLocations = Array.isArray(item.locations) && item.locations.length > 0;
+  const showInlineDescription = variant === 'tv' && hasLocations && Boolean(item.description);
   // Mostrar indicadores de local por variante SOLO si el producto está en ambos locales.
   // Si solo está en uno, todas las variantes comparten esa restricción → es redundante.
   const activeLocs = item.locations?.filter((l) => l.available).length ?? 0;
@@ -334,8 +374,8 @@ function renderCard(item, variant) {
     ]),
     el('div', { class: 'card__body' }, [
       el('h3', { class: 'card__title' }, item.name),
-      item.locations?.length ? renderLocationStatuses(item.locations, item.description) : null,
-      item.description ? el('p', { class: 'card__desc' }, item.description) : null,
+      hasLocations ? renderLocationStatuses(item.locations, showInlineDescription ? item.description : null) : null,
+      item.description && !showInlineDescription ? el('p', { class: 'card__desc' }, item.description) : null,
       variants.length ? renderVariants(variants, showVariantLocations) : null,
       el('div', { class: 'card__row' }, [
         el('span', { class: 'card__price' }, priceLabel),
